@@ -1,20 +1,13 @@
-<!---
-
-This file is used to generate your project datasheet. Please fill in the information below and delete any unused
-sections.
-
-You can also include images in this folder and reference them in the markdown. Each image must be less than
-512 kb in size, and the combined size of all images must be less than 1 MB.
--->
-
 ## How it works
 
-Explain how your project works
+This circuits takes 2×8 bits and generates 3×6 bits suitable for use by an associated PHY (to be designed later). It provides a very solid error detection rate, strong scrambling and eliminates problems inherent with classical LFSRs.
+
+Seriously, there are TONS of information already on https://hackaday.io/project/198914
 
 ## How to test
 
-Explain how to use your project
+Input a byte on the input, clock and eneable, and get a sequence of 3 6-bit words (+1 sequence number with 2 bits) at the output.
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+Custom boards will be put together.
