@@ -6,7 +6,11 @@ This unit works on 16-bit data, which are scrambled with a 17th bit for data/con
 
 - The term "gPEAC" means "generalised Pisano with End-Around Carry", a class of PRNG/scrambler/checksum that uses different mathematics than Galois-based LFSR. The gPEAC18 unit is a modular additive-based scrambler-checksum that combines the 17 bits and creates an extra check bit.
 
-- "Hammer" is a contraction of the "Hamming maximiser". The Hammer18 unit is a non-linear XOR-based scrambler that boosts the Hamming distance on the 18 bits.
+![](gPEAC18_codec_v4.png)
+
+- "Hammer" is a contraction of the "Hamming distance maximiser". The Hammer18 unit is a non-linear XOR-based scrambler that boosts the Hamming distance on the 18 bits. This version contains 3 layers of 18-bit permutations between 64 XOR2 gates, that looks like this: 
+
+![](Hammer18_w.png)
 
 Together they provide strong scrambling, eliminate problems inherent with classical LFSRs, and detect errors very early. With an equivalent of 56 bits of state, the system is tailored for early retransmition. A external circuit is required to implement the higher-level protocol, buffering and retransmition logic.
 
