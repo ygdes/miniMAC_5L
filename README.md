@@ -2,6 +2,8 @@
 
 # Tiny Tapeout : the miniMAC unit
 
+(MAC as in "Media Access Controller", one layer of a network protocol stack)
+
 - [Read the documentation for project](docs/info.md)
 
 - [Read about its design on Hackaday](https://hackaday.io/project/198914)
@@ -20,4 +22,4 @@ Together they provide a very strong and early error detection, tailored for earl
 
 ## What next?
 
-This is a VHDL to Verilog port. I'll try to get 2 boards to test both coder and decoder in a chain, let's hope it works.
+This is a VHDL to Verilog+IHP PDK port. I'll try to get 2 boards to test both coder and decoder in a chain, let's hope it works.
