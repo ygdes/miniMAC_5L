@@ -8,7 +8,7 @@
 
 ## What is this miniMAC
 
-This unit works on 16-bit data, which are scrambled with a 17th bit for data/control framing (C/D). The 18-bit result is suitable for sending to a PHY for serialisation and line coding.
+This unit works on 16-bit data, which are scrambled with a 17th bit for data/control framing (C/D). The 18-bit result is suitable for sending to a PHY for serialisation and line coding. Due to pin constraints, the data are transmitted in DDR, using both edges of the clock signal.
 
 This unit combines two sophisticated systems:
 - the gPEAC18 unit is an additive-based scrambler that combines the 17 bits and creates an extra check bit.
@@ -20,4 +20,4 @@ And it should fit in less than a tile.
 
 ## What next?
 
-This is a VHDL to Verilog port, let's hope it works.
+This is a VHDL to Verilog port. I'll try to get 2 boards to test both coder and decoder in a chain, let's hope it works.
