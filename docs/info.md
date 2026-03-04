@@ -18,9 +18,9 @@ Due to pin constraints, the data are transmitted in DDR, using both edges of the
 
 The "Hammer" circuit takes 2×9 bits and generates 2×9 bits suitable for use by an associated PHY (to be designed later).
 
-For the development, design and theory, there are TONS of information already on https://hackaday.io/project/198914
-
 This tile can serve as an encoder or a decoder, using one configuration pin.
+
+![](Hammer_codec_w.png)
 
 ## How to test
 
