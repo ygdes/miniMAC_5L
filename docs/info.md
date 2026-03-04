@@ -16,13 +16,15 @@ Together they provide strong scrambling, eliminate problems inherent with classi
 
 ## How it works
 
+The Hammer circuit can work both as an encoder or a decoder, using one configuration pin.
+
+![](Hammer_codec_w.png)
+
+The same can be done for the gPEAC circuit but it becomes overly complicated.
+
 Due to pin constraints, the data are transmitted in DDR, using both edges of the clock signal.
 
 The "Hammer" circuit takes 2×9 bits and generates 2×9 bits suitable for use by an associated PHY (to be designed later).
-
-This tile can serve as an encoder or a decoder, using one configuration pin.
-
-![](Hammer_codec_w.png)
 
 ## How to test
 
