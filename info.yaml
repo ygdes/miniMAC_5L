@@ -43,14 +43,14 @@ pinout:
   uo[7]: "DO7"
 
   # Bidirectional pins
-  uio[0]: "DI8"
-  uio[1]: "DO8"
-  uio[2]: "Error"
-  uio[3]: ""
-  uio[4]: ""
-  uio[5]: "Enc/Dec"
+  uio[0]: "D08"
+  uio[1]: "OEN"
+  uio[2]: ""
+  uio[3]: "DEN"
+  uio[4]: "Enc"
+  uio[5]: "Dec"
   uio[6]: "Reset"
-  uio[7]: "CLK"
+  uio[7]: "DI8"
 
 # Do not change!
 yaml_version: 6
