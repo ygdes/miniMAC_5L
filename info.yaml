@@ -46,10 +46,10 @@ pinout:
   uio[0]: "D08"
   uio[1]: "QEN"
   uio[2]: "CLK_out"
-  uio[3]: "DEN"
+  uio[3]: ""
   uio[4]: "Enc"
   uio[5]: "Dec"
-  uio[6]: "Reset"
+  uio[6]: "DEN"
   uio[7]: "DI8"
 
 # Do not change!
