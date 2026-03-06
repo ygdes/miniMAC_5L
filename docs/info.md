@@ -37,7 +37,7 @@ This tile contains four main pipelined units:
 
 The encode and decode units can be tested separately or together in the "loopback" mode.
 
-![](miniMAC_datapath.png)
+![](miniMAC_datapath_w.png)
 
 ## How to test
 
