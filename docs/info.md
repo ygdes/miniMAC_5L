@@ -28,6 +28,17 @@ Data output takes two more cycles. But even at the default 50MHz clock speed, th
 
 Two of the three stages can overlap, so it's all pipelined to provide a throughput of 1 every other clock pulse. The 2 cycles of operand feeding match the 2 cycles of gPEAC. Setting Den=1 during 2 consecutive cycles is an error.
 
+This tile contains four main pipelined units:
+
+- the input unit assembles a 18-bit word from two consecutive 9-bit halfwords
+- the encode unit scrambles 17 bits and generates a 18-bit word
+- the decode unit descrambles the 18-bit word, restores the 17-bit word and eventually generates an error flag.
+- the output unit splits the 18-bit words back into two consecutive 9-bit halfwords
+
+The encode and decode units can be tested separately or together in the "loopback" mode.
+
+![](miniMAC_datapath.png)
+
 ## How to test
 
 First let's examine the pinout. The inputs:
@@ -37,7 +48,7 @@ First let's examine the pinout. The inputs:
   - Enc=0, Dec=0 : bypass mode => the output is copied to the output after 3 cycles,
   - Enc=0, Dec=1 : decode mode => the cleartext input is scrambled and output after 5 cycles,
   - Enc=1, Dec=0 : encode mode => the scrambled input is restored to cleartext after 5 cycles,
-  - Enc=0, Dec=1 : loopback mode => encodes then decodes, the delayed output (8 cycles) must be identical to the input.
+  - Enc=1, Dec=1 : loopback mode => encodes then decodes, the delayed output (8 cycles) must be identical to the input.
 - DI0 to DI8 are 9-bit data half-words that are sampled at the rising edge of CLK.
 - DEN is Data ENable input, signalling the presence of the first 9-bit half-word of the pair on DI0:8. The second half MUST follow immediately, during the next cycle of CLK.
 
