@@ -31,7 +31,8 @@ module tt_um_miniMAC (
 
   // aliasing
   wire QEN, CLK_out, Zero, Encode, Decode, DEN;
-  wire [8:0] Din9, Dout9;
+  wire [8:0] Din9;
+  wire [8:0] Dout9;
   assign uo_out     = Dout9[7:0];
   assign Din9[7:0]  = ui_in;
 
