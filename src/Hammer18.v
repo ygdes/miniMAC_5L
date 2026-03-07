@@ -4,8 +4,7 @@
 //    from Hammer18.vhdl, applying iHP PDK gates and fixing original typos
 //
 // A 18-bit bijective Hamming distance maximiser with 64 XOR gates in 4 layers
-// See https://hackaday.io/project/198914-minimac-not-an-ethernet-transceiver/log/245372-proof-pudding
-// and https://hackaday.io/project/198914-minimac-not-an-ethernet-transceiver/log/245392-hammer-hamming-maximiser
+// See https://hackaday.io/project/198914/log/246545
 // "untangled" diagram: https://is.gd/WA6oiP
 //
 // Original permutation (it got altered somewhere it's not an absolute reference)
