@@ -4,7 +4,7 @@ IMPORTANT: This custom circuit and protocol is not at all compliant or even comp
 
 The miniMAC is a (currently partial) Media Access Controller for a simplified data link over twisted pairs. It provides error detection and scrambling of 16-bit data words, which are combined with a 17th bit for data/control framing (C/D). The 18-bit result is suitable for sending to a (custom) PHY (see https://hackaday.io/project/203186 ) for serialisation and line coding. This unit chains two sophisticated circuits:
 
-- The term "gPEAC" means "generalised Pisano with End-Around Carry" (see https://hackaday.io/project/178998 ), a class of PRNG/scrambler/checksum that uses different mathematics than Galois-based LFSR. The gPEAC18 unit is a non-power-of-two additive-based scrambler-checksum, with modulus=258114. It combines the 17 bits and creates an extra check bit. They both work as super-parity bits.
+- The term "gPEAC" means "generalised Pisano with End-Around Carry" (see https://hackaday.io/project/178998 ), a class of PRNG/scrambler/checksum that uses different mathematics than Galois-based LFSR. The gPEAC18 unit is a non-power-of-two additive-based scrambler-checksum, with modulus=258114 and its state is impossible to flush and freeze. It combines the 17 bits and creates an extra check bit. They both work as super-parity bits.
 
 ![](gPEAC18_codec_v4.png)
 
@@ -12,27 +12,25 @@ The miniMAC is a (currently partial) Media Access Controller for a simplified da
 
 ![](Hammer18_circuit.png)
 
-Conveniently, the same sea-of-XOR is identical, both for encoding and decoding, and the decoding side is "recursive" such that it amplifies any transmission error at the receiving end. The cost in latency, in both cases, is just a XOR in the critical datapath:
+Conveniently, the same sea-of-XOR is identical, both for encoding and decoding, and the decoding side is "recursive" such that it amplifies any transmission error at the receiving end. The sorted avalanche for a single bitflip is : 7 8 8 8 8 9 9 9 9 1 12 13 14 15 15 15 15 15 (total=200). The 64 XOR2 gates have a propagation delay of 10 gates, yet the effective latency in the system is just one XOR in the critical datapath:
 
 ![](Hammer_codec_3w.png)
 
-These very different types of circuits are complementary, together they provide very strong scrambling, eliminate problems inherent with classical LFSRs, and detect errors very early. With an equivalent of 56 bits of state and uncrashable mathematics, the system is tailored for safety and early retransmission to save bandwidth/latency and reduce buffer sizes (and cost).
+These very different types of circuits are complementary, together they provide very strong scrambling, eliminate problems inherent with classical LFSRs, and detect errors very early. With an equivalent of 56 bits of state and uncrashable mathematics, the system remains fast, compact and tailored for safety and early retransmission to save bandwidth/latency and reduce buffer sizes (and cost).
 
 An external circuit is required to implement the higher-level protocol, buffering and retransmission logic.
 
 ## How it works
 
-The Hammer stage works in one cycle while gPEAC requires two cycles. The overall latency is 3 cycles, a sequence that is internally started when data is initially input with Den=1. Due to pin constraints, the 19-bit data words are transmitted in two cycles with 9-bit half-words.
+The gPEAC requires two cycles:
 
-- For encoding, the input data goest through gPEAC (2 cycles) then Hammer.
+- For encoding, the input data goes through gPEAC then Hammer is inserted at the end of the last cycle.
 
-- For decoding, the scrambled data goes through Hammer then 2 cycles of gPEAC descrambling
+- For decoding, the scrambled data goes through Hammer at the start of the first cycle of gPEAC descrambling.
 
-Data output takes two more cycles. But even at the default 50MHz clock speed, that's 25M×18 bits or 450Mbps.
+Due to pin constraints, the 18-bit data words are transmitted in two cycles with 9-bit half-words. Counting input and output (2 cycles each), the overall latency is 5 cycles, following a sequence that is internally started when data is initially input with Den=1. Even at the low default 50MHz clock speed, that's still a bandwidth of 25M×18=450Mbps: fast enough to oversaturate a Cat5 twisted pair.
 
-Two of the three stages can overlap, so it's all pipelined to provide a throughput of 1 every other clock pulse. The 2 cycles of operand feeding match the 2 cycles of gPEAC. Setting Den=1 during 2 consecutive cycles is an error.
-
-This tile contains four main pipelined units:
+This tile contains four main pipelined units, sequenced by a shift register:
 
 - the input unit assembles a 18-bit word from two consecutive 9-bit halfwords
 - the encode unit scrambles 17 bits and generates a 18-bit word
@@ -58,7 +56,7 @@ First let's examine the pinout. The inputs:
 
 The outputs:
 - CLK_out provides an appropriate clock, adjusted for phase and delay due to onchip routing, for easy chaining: output signals are updated on the falling edge of CLK_out.
-- DO0 to DO8 is the output half-word.
+- DO0 to DO8 are the data half-word.
 - QEN is the "output enable" generated by the internal sequencer, that signals that a first half-word is available.
 - Z is a flag set to 1 when the decoded output has DO[15:0] cleared (think of a 16-bit NOR), useful to implement the higher-level protocol.
 
@@ -66,9 +64,10 @@ The outputs:
 
 Notes :
 - Data half-words are clock-sourced, to allow seamless chaining of multiple chips.
-- Decoding errors are signalled but not managed/acted upon, a FSM and appropriate circuits must reset the registers.
-- the input word contains the C/D bit and an unused bit.
-- the output word contains the C/D bit and an error bit (saves a pin)
+- Decoding errors (and Zero) are signalled but not managed/acted upon, a FSM and appropriate circuits must reset the registers.
+- the input/plaintext word contains the C/D bit and an unused bit. C/D should be on Dx8 of the first halfword for fastest detection.
+- the output/scrambled word contains the C/D bit and an error bit (saves a pin)
+- Asserting DEN during more than one cycle is an error condition.
 
 ## External hardware
 
