@@ -5,16 +5,27 @@
   Just because I don't want to learn Verilog.
 */
 
+module fanout3(
+  input  wire A,
+  output [2:0] X
+);
+  wire N;
+  (* keep *) sg13g2_inv_1 foN(.Y(N),    .A(A));
+  (* keep *) sg13g2_inv_1 fo0(.Y(X[0]), .A(N));
+  (* keep *) sg13g2_inv_1 fo1(.Y(X[1]), .A(N));
+  (* keep *) sg13g2_inv_1 fo2(.Y(X[2]), .A(N));
+endmodule
+
 module fanout4(
   input  wire A,
   output [3:0] X
 );
   wire N;
-  (* keep *) sg13g2_inv_4 foN(.Y(N),    .A(A));
-  (* keep *) sg13g2_inv_4 fo0(.Y(X[0]), .A(N));
-  (* keep *) sg13g2_inv_4 fo1(.Y(X[1]), .A(N));
-  (* keep *) sg13g2_inv_4 fo2(.Y(X[2]), .A(N));
-  (* keep *) sg13g2_inv_4 fo3(.Y(X[3]), .A(N));
+  (* keep *) sg13g2_inv_1 foN(.Y(N),    .A(A));
+  (* keep *) sg13g2_inv_1 fo0(.Y(X[0]), .A(N));
+  (* keep *) sg13g2_inv_1 fo1(.Y(X[1]), .A(N));
+  (* keep *) sg13g2_inv_1 fo2(.Y(X[2]), .A(N));
+  (* keep *) sg13g2_inv_1 fo3(.Y(X[3]), .A(N));
 endmodule
 
 module mux2_x18(
@@ -102,5 +113,23 @@ module dffen_x18(
   (* keep *) sg13g2_sdfrbpq_1 dffe15(.Q(fb[15]), .D(fb[15]), .SCD(D[15]), .SCE(e[4]), .RESET_B(r[4]), .CLK(clk));
   (* keep *) sg13g2_sdfrbpq_1 dffe16(.Q(fb[16]), .D(fb[16]), .SCD(D[16]), .SCE(e[4]), .RESET_B(r[4]), .CLK(clk));
   (* keep *) sg13g2_sdfrbpq_1 dffe17(.Q(fb[17]), .D(fb[17]), .SCD(D[17]), .SCE(e[4]), .RESET_B(r[4]), .CLK(clk));
+endmodule
 
+module dff_x9(
+  input  wire clk,
+  input  wire rst,
+  input  wire [8:0] D,
+  output wire [8:0] Q
+);
+  wire [3:1] r; fanout3 fo_r(.A(rst), .X(r));
+
+  (* keep *) sg13g2_dfrbpq_1 dff0(.Q(Q[0]), .D(D[0]), .RESET_B(r[1]), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 dff1(.Q(Q[1]), .D(D[1]), .RESET_B(r[1]), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 dff2(.Q(Q[2]), .D(D[2]), .RESET_B(r[1]), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 dff3(.Q(Q[3]), .D(D[3]), .RESET_B(r[2]), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 dff4(.Q(Q[4]), .D(D[4]), .RESET_B(r[2]), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 dff5(.Q(Q[5]), .D(D[5]), .RESET_B(r[2]), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 dff6(.Q(Q[6]), .D(D[6]), .RESET_B(r[3]), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 dff7(.Q(Q[7]), .D(D[7]), .RESET_B(r[3]), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 dff8(.Q(Q[8]), .D(D[8]), .RESET_B(r[3]), .CLK(clk));
 endmodule
