@@ -43,11 +43,28 @@ module tt_um_miniMAC (
 /////////////////////////////////////////////////////////////////////////////
 
   // ring oscillator anyone ?
-    (* keep *) sg13g2_inv_1 negClkOut(.Y(CLK_out), .A(clk));
+  (* keep *) sg13g2_inv_1 negClkOut(.Y(CLK_out), .A(clk));
 
   // resynch the reset signal
   wire INT_RESET;
-    (* keep *) sg13g2_dfrbpq_2 DFF_reset(.Q(INT_RESET), .D(1'b1), .RESET_B(rst_n), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_2 DFF_reset(.Q(INT_RESET), .D(1'b1), .RESET_B(rst_n), .CLK(clk));
+
+  // Pipeline management
+  wire Den_In0, Den_In1, Den_OK, Stage1, Stage2;
+  // Den_In0 <= DEN       DFF
+  // Den_In1 <= Den_In0   DFF_Q
+  // Den_OK <= Den_In0 & ~Den_In1  sg13g2_and2_2
+
+  // Input buffers
+  wire [8:0]  FirstHalfWord;
+  wire [17:0] FirstWord;
+  dff_x9    fhw(.clk(clk), .rst(INT_RESET), .D(Din9), .Q(FirstHalfWord));                           // Always samples the input
+  dffen_x18  fw(.clk(clk), .rst(INT_RESET), .D({Din9, FirstHalfWord}), .Q(FirstWord), .en(Den_OK)); // Samples only if DEN is ok
+
+  
+// Output buffers
+
+
 
 
   // Dumb loopback
