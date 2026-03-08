@@ -50,10 +50,19 @@ module tt_um_miniMAC (
   (* keep *) sg13g2_dfrbpq_2 DFF_reset(.Q(INT_RESET), .D(1'b1), .RESET_B(rst_n), .CLK(clk));
 
   // Pipeline management
-  wire Den_In0, Den_In1, Den_OK, Stage1, Stage2;
-  // Den_In0 <= DEN       DFF
-  // Den_In1 <= Den_In0   DFF_Q
+  wire Den_In0, Den_In1, Den_OK,
+       Stage_Encode1, Stage_Encode2,
+       Stage_Decode1, Stage_Decode2;
+  // Den_In0 <= DEN       DFF     sg13g2_dfrbpq_1  / 49
+  // Den_In1 <= ~Den_In0   DFF_Q   sg13g2_dfrbp_1 / 52
   // Den_OK <= Den_In0 & ~Den_In1  sg13g2_and2_2
+
+  // Stage_Encode1 <= Den_OK, reset= Encode  sg13g2_dfrbpq_1
+  // Stage_Encode2 <= Stage_Encode1
+  //  Stage_Decode1_ <= Den_OK si decode, Stage_Encode2 si loopback  => mux + and2
+  // Stage_Decode1
+  // Stage_Decode2 <= Stage_Decode1
+
 
   // Input buffers
   wire [8:0]  FirstHalfWord;
