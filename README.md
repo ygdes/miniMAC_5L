@@ -16,9 +16,9 @@ This unit combines two bleeding-edge circuits:
 
 - the gPEAC18 unit is an additive-based scrambler that combines the 17 bits and creates an extra check bit.
 
-- the Hammer18 unit is a non-linear XOR-based scrambler that boosts the Hamming distance on the 18 bits.
+- the Hammer18 unit is a bijective XOR-based scrambler that boosts the Hamming distance on the 18 bits at low Bit Error Rates.
 
-Together they provide a very strong and early error detection, tailored for early retransmition. Higher levels of the protocol will detect anomalous conditions and reset the link's state.
+Together they provide a very strong and early error detection, tailored for early retransmition, saving costs, latency and bandwidth. Higher levels of the protocol will detect anomalous conditions and reset the link's state.
 
 ## What next?
 
