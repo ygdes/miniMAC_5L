@@ -69,7 +69,9 @@ module tt_um_miniMAC (
   // Den_In0 <= DEN        sg13g2_dfrbpq_1  / 49
   (* keep *) sg13g2_dfrbpq_1 DFF_den0(.Q(Den_In0), .D(DEN), .RESET_B(INT_RESET), .CLK(clk));
   // Den_In1 <= ~Den_In0   DFF_Q   sg13g2_dfrbp_1 / 52
+  /* verilator lint_off PINCONNECTEMPTY */
   (* keep *) sg13g2_dfrbp_1 DFF_den1(.Q_N(Den_In1), .Q(), .D(Den_In0), .RESET_B(INT_RESET), .CLK(clk));
+  /* verilator lint_on PINCONNECTEMPTY */
   // Den_OK <= Den_In0 & ~Den_In1  sg13g2_and2_2
   (* keep *) sg13g2_and2_1 Den_OK_and2(.X(Den_OK), .A(Den_In0), .B(Den_In1));
 
