@@ -133,3 +133,40 @@ module dff_x9(
   (* keep *) sg13g2_dfrbpq_1 dff7(.Q(Q[7]), .D(D[7]), .RESET_B(r[3]), .CLK(clk));
   (* keep *) sg13g2_dfrbpq_1 dff8(.Q(Q[8]), .D(D[8]), .RESET_B(r[3]), .CLK(clk));
 endmodule
+
+module dffn_x9(
+  input  wire clk,
+  input  wire rst,
+  input  wire [8:0] D,
+  output wire [8:0] QN
+);
+  wire [3:1] r; fanout3 fo_r(.A(rst), .X(r));
+
+  (* keep *) sg13g2_dfrbp_2 dffn0(.Q(QN[0]), .D(D[0]), .RESET_B(r[1]), .CLK(clk));
+  (* keep *) sg13g2_dfrbp_2 dffn1(.Q(QN[1]), .D(D[1]), .RESET_B(r[1]), .CLK(clk));
+  (* keep *) sg13g2_dfrbp_2 dffn2(.Q(QN[2]), .D(D[2]), .RESET_B(r[1]), .CLK(clk));
+  (* keep *) sg13g2_dfrbp_2 dffn3(.Q(QN[3]), .D(D[3]), .RESET_B(r[2]), .CLK(clk));
+  (* keep *) sg13g2_dfrbp_2 dffn4(.Q(QN[4]), .D(D[4]), .RESET_B(r[2]), .CLK(clk));
+  (* keep *) sg13g2_dfrbp_2 dffn5(.Q(QN[5]), .D(D[5]), .RESET_B(r[2]), .CLK(clk));
+  (* keep *) sg13g2_dfrbp_2 dffn6(.Q(QN[6]), .D(D[6]), .RESET_B(r[3]), .CLK(clk));
+  (* keep *) sg13g2_dfrbp_2 dffn7(.Q(QN[7]), .D(D[7]), .RESET_B(r[3]), .CLK(clk));
+  (* keep *) sg13g2_dfrbp_2 dffn8(.Q(QN[8]), .D(D[8]), .RESET_B(r[3]), .CLK(clk));
+endmodule
+
+module a22oi_x9(
+  input  wire [8:0] A1,
+  input  wire [8:0] A2,
+  input  wire [8:0] B1,
+  input  wire [8:0] B2,
+  output wire [8:0] Y
+);
+  (* keep *) sg13g2_a22oi_1 a22oi_0(.A1(A1[0]), .A2(A2[0]), .B1(B1[0]), .B2(B2[0]), .Y(Y[0]));
+  (* keep *) sg13g2_a22oi_1 a22oi_1(.A1(A1[1]), .A2(A2[1]), .B1(B1[1]), .B2(B2[1]), .Y(Y[1]));
+  (* keep *) sg13g2_a22oi_1 a22oi_2(.A1(A1[2]), .A2(A2[2]), .B1(B1[2]), .B2(B2[2]), .Y(Y[2]));
+  (* keep *) sg13g2_a22oi_1 a22oi_3(.A1(A1[3]), .A2(A2[3]), .B1(B1[3]), .B2(B2[3]), .Y(Y[3]));
+  (* keep *) sg13g2_a22oi_1 a22oi_4(.A1(A1[4]), .A2(A2[4]), .B1(B1[4]), .B2(B2[4]), .Y(Y[4]));
+  (* keep *) sg13g2_a22oi_1 a22oi_5(.A1(A1[5]), .A2(A2[5]), .B1(B1[5]), .B2(B2[5]), .Y(Y[5]));
+  (* keep *) sg13g2_a22oi_1 a22oi_6(.A1(A1[6]), .A2(A2[6]), .B1(B1[6]), .B2(B2[6]), .Y(Y[6]));
+  (* keep *) sg13g2_a22oi_1 a22oi_7(.A1(A1[7]), .A2(A2[7]), .B1(B1[7]), .B2(B2[7]), .Y(Y[7]));
+  (* keep *) sg13g2_a22oi_1 a22oi_8(.A1(A1[8]), .A2(A2[8]), .B1(B1[8]), .B2(B2[8]), .Y(Y[8]));
+endmodule
