@@ -173,7 +173,7 @@ endmodule
 
 module or16(
   input  wire [15:0] A,
-  output wire        X
+  output wire        O
 );
   wire [3:0] t;
 
@@ -181,6 +181,6 @@ module or16(
   sg13g2_nor4_1 nor1(.Y(t[1]), .A(A[ 4]), .B(A[ 5]), .C(A[ 6]), .D(A[ 7]));
   sg13g2_nor4_1 nor2(.Y(t[2]), .A(A[ 8]), .B(A[ 9]), .C(A[10]), .D(A[11]));
   sg13g2_nor4_1 nor3(.Y(t[3]), .A(A[12]), .B(A[13]), .C(A[14]), .D(A[15]));
-  sg13g2_nand4_1 nand4(.Y(X), .A(t[0]), .B(t[1]), .C(t[2]), .D(t[3]));
+  sg13g2_nand4_1 nand4(.Y(O), .A(t[0]), .B(t[1]), .C(t[2]), .D(t[3]));
 endmodule
 
