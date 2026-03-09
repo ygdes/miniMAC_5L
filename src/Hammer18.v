@@ -110,4 +110,17 @@ module Hammer18x4 (
   sg13g2_xor2_1 xor_O_2   (.X(O[ 2]),  .A(L3[14]), .B(L3[16]));
   sg13g2_xor2_1 xor_O_1   (.X(O[ 1]),  .A(L3[12]), .B(L3[14]));
   sg13g2_xor2_1 xor_O_0   (.X(O[ 0]),  .A(L3[11]), .B(L3[12]));
+  
+  // prevent warnings
+  assign L1[ 4] = 1'b0;
+  assign L1[13] = 1'b0;
+  assign L2[ 4] = 1'b0;
+  assign L2[13] = 1'b0;
+  assign L3[ 4] = 1'b0;
+  assign L3[13] = 1'b0;
+  wire _unused = &{
+    L1[ 4], L1[13],
+    L2[ 4], L2[13],
+    L3[ 4], L3[13],
+    1'b0};
 endmodule
