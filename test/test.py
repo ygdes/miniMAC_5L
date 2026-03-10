@@ -38,15 +38,15 @@ async def input_parameter(val, dut):
 
 async def output_parameter(dut):
   timeout = 0
-  while (dut.uio_out.value & QEN) == 0:
+  while (int(dut.uio_out.value) & QEN) == 0:
     timeout = timeout + 1
     if timeout > 10:
       return -1
     await ClockCycles(dut.clk, 1)
-  val = dut.uo_out.value + ((dut.uio_out.value & Dout_8)<<8)
+  val = int(dut.uo_out.value) + ((int(dut.uio_out.value) & Dout_8)<<8)
   # expect DEN=0 here
   await ClockCycles(dut.clk, 1)
-  return val+ ((dut.uo_out.value + (dut.uio_out.value & Dout_8)<<8) << 9)
+  return val+ ((int(dut.uo_out.value) + (int(dut.uio_out.value) & Dout_8)<<8) << 9)
   
 
 # Test vectors for a direct Hammer18 lookup.
