@@ -118,9 +118,9 @@ async def test_project(dut):
     i = int(x[0],2)
     v = int(x[1],2)
     print("testing " + x[0] + " => " + x[1]);
-    input_parameter(i, dut)
-    o = output_parameter(dut)
-  #  print(" - found                     " + bin(o))
+    await input_parameter(i, dut)
+    o = await output_parameter(dut)
+    print(" - found                     " + bin(o))
 
   # Set the input values you want to test
   #dut.ui_in.value = 20
