@@ -122,8 +122,8 @@ async def test_project(dut):
     i = int(x[0],2)
     v = int(x[1],2)
     print("testing " + x[0] + " => " + x[1]);
-    await ClockCycles(dut.clk, 3)
-    #await input_parameter(i, dut)
+    #await ClockCycles(dut.clk, 3)
+    await input_parameter(i, dut)
     #o = await output_parameter(dut)
     #print(" - found                     " + bin(o))
 
