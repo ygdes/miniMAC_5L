@@ -39,7 +39,7 @@ async def output_parameter(dut):
   timeout = 0
   while (dut.uio_out.value & QEN) == 0:
     timeout = timeout + 1
-    if count > 10:
+    if timeout > 10:
       return -1
     await ClockCycles(dut.clk, 1)
   val = dut.uo_out.value + ((dut.uio_out.value & Dout_8)<<8)
@@ -119,7 +119,7 @@ async def test_project(dut):
     v = int(x[1],2)
     print("testing " + x[0] + " => " + x[1]);
     input_parameter(i, dut)
-  #  o = output_parameter(dut)
+    o = output_parameter(dut)
   #  print(" - found                     " + bin(o))
 
   # Set the input values you want to test
