@@ -38,11 +38,13 @@ async def input_parameter(val, dut):
 
 async def output_parameter(dut):
   timeout = 0
-  while (int(dut.uio_out.value) & QEN) == 0:
+  while dut.uio_out.value[1] == 0:
     timeout = timeout + 1
     if timeout > 10:
+      print("timeout !")
       return -1
     await ClockCycles(dut.clk, 1)
+  print(str(timeout) + " cyles")
   val = int(dut.uo_out.value) + ((int(dut.uio_out.value) & Dout_8)<<8)
   # expect DEN=0 here
   await ClockCycles(dut.clk, 1)
