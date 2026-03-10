@@ -98,12 +98,10 @@ module tt_um_miniMAC (
   (* keep *) sg13g2_dfrbpq_1 DFF_sero(.Q(Zero), .D(Zero_value), .RESET_B(INT_RESET), .CLK(clk));  // Latch & output the sum
 
   // Multiplex the last half words:
-  // save the MSB for the next cycle
-  dff_x9 dffMSB(.D(LastWord[17:9]), .Q(LastMSB), .clk(clk), .rst(INT_RESET));
-  a22o_fo_x9 sel2(.A1(QEN1), .A2(LastWord[8:0]),
-                  .B1(QEN2), .B2(LastMSB),
-                  .Y(LastHalfWord));  // Select MSB/LSB
-  // The output buffer
+  dff_x9 dffMSB(.D(LastWord[17:9]), .Q(LastMSB), .clk(clk), .rst(INT_RESET)); // save the MSB for the next cycle
+  a22o_fo_x9 sel2(.A1(QEN1), .A2(LastWord[8:0]),  // LSB first
+                  .B1(QEN2), .B2(LastMSB),        // then MSB
+                  .Y(LastHalfWord));              // otherwise 0
   dff_x9 dffOut(.D(LastHalfWord), .Q(Dout9), .clk(clk), .rst(INT_RESET));  // Latch & output the data halfword
 
   
