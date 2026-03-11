@@ -7,21 +7,21 @@
 
 module fanout3(
   input  wire A,
-  output [2:0] X
+  output wire [2:0] X
 );
-
+  /*
   wire N;
   (* keep *) sg13g2_inv_1 foN(.Y(N),    .A(A));
   (* keep *) sg13g2_inv_1 fo0(.Y(X[0]), .A(N));
   (* keep *) sg13g2_inv_1 fo1(.Y(X[1]), .A(N));
   (* keep *) sg13g2_inv_1 fo2(.Y(X[2]), .A(N));
-
-//  assign X = { 3{A} };
+  */
+  assign X = { 3{A} };
 endmodule
 
 module fanout4(
   input  wire A,
-  output [3:0] X
+  output wire [3:0] X
 );
   /*
   wire N;
