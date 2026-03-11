@@ -25,7 +25,7 @@ async def input_parameter(val, dut):
   dut.ui_in.value = (val >> 9) & 255
   # clear DEN, set MSB
   dut.uio_in.value = t | (Din_8 & (val >> 10))
-  await ClockCycles(dut.clk, 1)
+  #await ClockCycles(dut.clk, 1)
 
 
 async def output_parameter(dut):
@@ -118,15 +118,15 @@ async def test_project(dut):
     o = await output_parameter(dut)
     print(" - found                 " + bin(o + (1 << 20)))
     #print("")
-    #assert v == o
-    await ClockCycles(dut.clk, 1)
+    assert v == o
+    #await ClockCycles(dut.clk, 1)
 
   # Set the input values you want to test
   #dut.ui_in.value = 20
   #dut.uio_in.value = 30
 
   # Wait for one clock cycle to see the output values
-  await ClockCycles(dut.clk, 10)
+  await ClockCycles(dut.clk, 4)
 
   # The following assersion is just an example of how to check the output values.
   # Change it to match the actual expected output of your module:
