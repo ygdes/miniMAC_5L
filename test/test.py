@@ -5,21 +5,12 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles
 
-#  assign uo_out     = Dout9[7:0];
-#  assign Din9[7:0]  = ui_in;
-#  assign uio_out[0] = Dout9[8];
-#  assign uio_out[1] = QEN;
-#  assign uio_out[2] = CLK_out;
-#  assign uio_out[3] = Zero;
-#  assign DEN        = uio_in[4];
-#  assign Encode     = uio_in[5];
-#  assign Decode     = uio_in[6];
-#  assign Din9[8]    = uio_in[7];
-
+# outputs:
 Dout_8     =   1
 QEN        =   2
 CLK_out    =   4
 Zero       =   8
+#inputs:
 DEN        =  16
 Encode     =  32
 Decode     =  64
@@ -38,19 +29,21 @@ async def input_parameter(val, dut):
 
 
 async def output_parameter(dut):
-  timeout = 0
-  print(bin(int(dut.uio_out.value))  + "  " + bin(int(dut.uo_out.value)));
-  while (int(dut.uio_out.value) & QEN) == 0:
-    timeout = timeout + 1
-    if timeout > 10:
-      print("timeout !")
-      return -1
-    await ClockCycles(dut.clk, 1)
-  print("waited " + str(timeout) + " cyles")
+  print("uio=" + bin(int(dut.uio_out.value))  + "   uo=" + bin(int(dut.uo_out.value)));
+  #timeout = 0
+  #while (int(dut.uio_out.value) & QEN) == 0:
+  #timeout = timeout + 1
+  #  if timeout > 10:
+  #    print("timeout !")
+  #    return -1
+  #  await ClockCycles(dut.clk, 1)
+  #print("waited " + str(timeout) + " cyles")
+  # LSB first:
   val = int(dut.uo_out.value) + ((int(dut.uio_out.value) & Dout_8)<<8)
   await ClockCycles(dut.clk, 1)
-  return val+ ((int(dut.uo_out.value) + (int(dut.uio_out.value) & Dout_8)<<8) << 9)
-  
+  print("uio=" + bin(int(dut.uio_out.value))  + "   uo=" + bin(int(dut.uo_out.value)));
+  return val + (( int(dut.uo_out.value) + ((int(dut.uio_out.value) & Dout_8)<<8)) << 9)
+
 
 # Test vectors for a direct Hammer18 lookup.
 vectors = [
@@ -124,7 +117,7 @@ async def test_project(dut):
     print("testing " + x[0] + " => " + x[1]);
     await input_parameter(i, dut)
     o = await output_parameter(dut)
-    print(" - found                     " + bin(o))
+    print(" - found                   " + bin(o + (1 << 20)))
     await ClockCycles(dut.clk, 3)
 
   # Set the input values you want to test
