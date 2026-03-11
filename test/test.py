@@ -30,9 +30,9 @@ async def input_parameter(val, dut):
 
 async def output_parameter(dut):
   await ClockCycles(dut.clk, 2)
-  print("uo=" + bin(int(dut.uo_out.value)) + "uio=" + bin(int(dut.uio_out.value))  + "   QEN=" + str(dut.uio_out.value[1]))
+  print("uo=" + bin(int(dut.uo_out.value)) + "   uio=" + bin(int(dut.uio_out.value))  + "   QEN=" + str(dut.uio_out.value[1]))
   await ClockCycles(dut.clk, 1)
-  print("uo=" + bin(int(dut.uo_out.value)) + "uio=" + bin(int(dut.uio_out.value))  + "   QEN=" + str(dut.uio_out.value[1]))
+  print("uo=" + bin(int(dut.uo_out.value)) + "   uio=" + bin(int(dut.uio_out.value))  + "   QEN=" + str(dut.uio_out.value[1]))
   return (1<<19)
   
   #timeout = 0
