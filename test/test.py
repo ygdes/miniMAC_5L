@@ -122,7 +122,8 @@ async def test_project(dut):
     o = await output_parameter(dut)
     print(" - found                 " + bin(o + (1 << 20)))
     print("")
-    await ClockCycles(dut.clk, 3)
+    assert v == o
+    await ClockCycles(dut.clk, 1)
 
   # Set the input values you want to test
   #dut.ui_in.value = 20
