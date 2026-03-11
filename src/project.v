@@ -40,7 +40,7 @@ module tt_um_miniMAC (
   assign uio_out[7:4] = 4'b0000;
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, uio_in[0], uio_in[1], uio_in[2], uio_in[3], 1'b0};
+  wire _unused = &{uio_in[0], uio_in[1], uio_in[2], uio_in[3], 1'b0};
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +49,7 @@ module tt_um_miniMAC (
 
   // resynch the reset signal
   wire INT_RESET;
-  (* keep *) sg13g2_dfrbpq_1 DFF_reset(.Q(INT_RESET), .D(1'b1), .RESET_B(rst_n), .CLK(clk));
+    (* keep *) sg13g2_dfrbpq_1 DFF_reset(.Q(INT_RESET), .D(ena), .RESET_B(rst_n), .CLK(clk));
 
   // Pipeline management
   wire Den_In0, Den_In1, Den_OK;
