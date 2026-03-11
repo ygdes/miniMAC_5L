@@ -130,10 +130,14 @@ async def test_project(dut):
 
   # test in Encode mode (mode=0)
   dut._log.info("Starting Direct Mode")
-  await input_parameter(1, Encode, dut)
-  
-  for x in range(0, 20):
-    await input_parameter(0, Encode, dut)
+
+  Results = []
+  for x in range(10, 20):
+    printf(str(x))
+    await input_parameter(x, Encode, dut)
+    t = await output_parameter(dut)
+    printf(str(x) + " : " + str(t))
+    Results.append(t)
   
   await ClockCycles(dut.clk, 6)
   dut._log.info("Done.")
