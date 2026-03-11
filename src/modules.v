@@ -16,7 +16,7 @@ module fanout3(
   (* keep *) sg13g2_inv_1 fo1(.Y(X[1]), .A(N));
   (* keep *) sg13g2_inv_1 fo2(.Y(X[2]), .A(N));
   */
-  assign X = { A, A, A };
+  assign X = { 3{A} };
 endmodule
 
 module fanout4(
@@ -31,7 +31,7 @@ module fanout4(
   (* keep *) sg13g2_inv_1 fo2(.Y(X[2]), .A(N));
   (* keep *) sg13g2_inv_1 fo3(.Y(X[3]), .A(N));
   */
-  assign X = { A, A, A, A };
+  assign X = { 4{A} };
 endmodule
 
 
