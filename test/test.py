@@ -29,30 +29,23 @@ async def input_parameter(val, dut):
 
 
 async def output_parameter(dut):
-  await ClockCycles(dut.clk, 2)
-  assert dut.uio_out.value[1] == 1
+  timeout = 0
+  while (int(dut.uio_out.value[1])) == 0:
+    timeout = timeout + 1
+    if timeout > 10:
+      print("timeout !")
+      assert false
+      return -1
+    await ClockCycles(dut.clk, 1)
+
+  print("waited " + str(timeout))  
   # LSB first:
   val = int(dut.uo_out.value) + ((int(dut.uio_out.value) & Dout_8)<<8)
   #print("uo=" + bin(int(dut.uo_out.value)) + "   uio=" + bin(int(dut.uio_out.value))  + "   QEN=" + str(dut.uio_out.value[1]))
   await ClockCycles(dut.clk, 1)
   assert dut.uio_out.value[1] == 0
   #print("uo=" + bin(int(dut.uo_out.value)) + "   uio=" + bin(int(dut.uio_out.value))  + "   QEN=" + str(dut.uio_out.value[1]))
-  return (1<<19) + val + (( int(dut.uo_out.value) + ((int(dut.uio_out.value) & Dout_8)<<8)) << 9)
-  
-  #timeout = 0
-  #while (int(dut.uio_out.value) & QEN) == 0:
-  #timeout = timeout + 1
-  #  if timeout > 10:
-  #    print("timeout !")
-  #    return -1
-  #  await ClockCycles(dut.clk, 1)
-  #print("waited " + str(timeout) + " cyles")
-
-  # LSB first:
-  #val = int(dut.uo_out.value) + ((int(dut.uio_out.value) & Dout_8)<<8)
-  #await ClockCycles(dut.clk, 1)
-  #print("uio=" + bin(int(dut.uio_out.value))  + "   uo=" + bin(int(dut.uo_out.value)))
-  #return val + (( int(dut.uo_out.value) + ((int(dut.uio_out.value) & Dout_8)<<8)) << 9)
+  return val + (( int(dut.uo_out.value) + ((int(dut.uio_out.value) & Dout_8)<<8)) << 9)
 
 
 # Test vectors for a direct Hammer18 lookup.
