@@ -17,11 +17,11 @@ module fanout3(
   input  wire A,
   output wire [2:0] X
 );
-  assign X[0] = A;
-  assign X[1] = A;
-  assign X[2] = A;
+//  assign X[0] = A;
+//  assign X[1] = A;
+//  assign X[2] = A;
 
-//  assign X = { A, A, A }; syntax error ????
+  assign X[2:0] = { 3{A} };
 endmodule
 
 module fanout4(
