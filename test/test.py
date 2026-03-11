@@ -40,15 +40,14 @@ async def input_parameter(val, dut):
 async def output_parameter(dut):
   timeout = 0
   print(bin(int(dut.uio_out.value))  + "  " + bin(int(dut.uo_out.value)));
-  while dut.uio_out.value[1] == 0:
+  while (int(dut.uo_out.value) & QEN) == 0:
     timeout = timeout + 1
     if timeout > 10:
       print("timeout !")
       return -1
     await ClockCycles(dut.clk, 1)
-  print(str(timeout) + " cyles")
+  print("waited " + str(timeout) + " cyles")
   val = int(dut.uo_out.value) + ((int(dut.uio_out.value) & Dout_8)<<8)
-  # expect DEN=0 here
   await ClockCycles(dut.clk, 1)
   return val+ ((int(dut.uo_out.value) + (int(dut.uio_out.value) & Dout_8)<<8) << 9)
   
@@ -123,10 +122,10 @@ async def test_project(dut):
     i = int(x[0],2)
     v = int(x[1],2)
     print("testing " + x[0] + " => " + x[1]);
-    #await ClockCycles(dut.clk, 3)
     await input_parameter(i, dut)
-    #o = await output_parameter(dut)
-    #print(" - found                     " + bin(o))
+    o = await output_parameter(dut)
+    print(" - found                     " + bin(o))
+    await ClockCycles(dut.clk, 3)
 
   # Set the input values you want to test
   #dut.ui_in.value = 20
