@@ -1,6 +1,8 @@
-/*
+/*  project.v
  * Copyright (c) 2026 Yann Guidon / whygee@f-cpu.org
  * SPDX-License-Identifier: Apache-2.0
+ *
+ *   Instantiate the Hammer18 Hamming Distance Maximiser
  */
 
 `default_nettype none
