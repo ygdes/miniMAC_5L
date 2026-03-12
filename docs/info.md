@@ -22,7 +22,7 @@ An external circuit is required to implement the higher-level protocol, bufferin
 
 ## How it works
 
-The gPEAC requires two cycles:
+The gPEAC requires two cycles, two passes through the adder: first to compute the sums, then to adjust the modulus. OTOH the Hammer18 circuit requires one depth of XOR, but at different places:
 
 - For encoding, the input data goes through gPEAC then Hammer is inserted at the end of the last cycle.
 
