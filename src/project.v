@@ -80,6 +80,7 @@ module tt_um_miniMAC (
   dff_x9    fhw(.clk(clk), .rst(INT_RESET), .D(Din9), .Q(FirstHalfWord));                           // Always samples the input
   dffen_x18  fw(.clk(clk), .rst(INT_RESET), .D({Din9, FirstHalfWord}), .Q(FirstWord), .en(Den_OK)); // Samples only if DEN is ok
 
+/*
   // Multi-mode Hammer18 unit
   wire DecOrEnc;
   (* keep *) sg13g2_or2_1 OrSel(.A(Encode), .B(Decode), .X(DecOrEnc));
@@ -89,8 +90,38 @@ module tt_um_miniMAC (
   dffen_x18 delayHam(.clk(clk), .rst(INT_RESET), .D(Hammer_result), .Q(Hammer_delayed), .en(QEN1));
   xor2_x18 mixData(.A(FirstWord), .B(Hammer_delayed), .X(Hammer_mixed) );
   mux2_x18 selResult( .sel(DecOrEnc), .if0(Hammer_result), .if1(Hammer_mixed), .res(LastWord) );
+*/
 
-  
+
+  // Encoder
+  wire EncResult_En;
+  assign EncResult_En = QEN1;  //////////////////////////////////////////////////////////////// à changer après
+  wire [17:0] HammerEnc_operand, HammerEnc_result, HammerEnc_delayed, HammerEnc_mixed;
+  assign HammerEnc_operand = FirstWord;    //////////////////////////////////////////////////// à changer après
+  Hammer18x4 HamEnc(.I(HammerEnc_operand), .O(HammerEnc_result));
+  dffen_x18 delayEnc(.clk(clk), .rst(INT_RESET), .D(HammerEnc_result), .Q(HammerEnc_delayed), .en(EncResult_En));
+  xor2_x18 mixEnc(.A(FirstWord), .B(HammerEnc_delayed), .X(HammerEnc_mixed) );
+
+
+  // Decoder
+  wire DecResult_En;
+  assign DecResult_En = QEN1;  //////////////////////////////////////////////////////////////// à changer après
+  wire DecNandEnc;
+  (* keep *) sg13g2_nand2_1 NandSel(.A(Encode), .B(Decode), .X(DecNandEnc));
+  wire [17:0] HammerDec_operand, HammerDec_result, HammerDec_delayed, HammerDec_mixed;
+
+  mux2_x18 selOperand( .sel(DecNandEnc), .if0(HammerEnc_mixed), .if1(FirstWord), .res(HammerDec_operand) );
+  xor2_x18 mixDec(.A(HammerDec_operand), .B(HammerDec_delayed), .X(HammerDec_mixed) );
+  Hammer18x4 HamDec(.I(HammerDec_operand), .O(HammerDec_result));
+  dffen_x18 delayDec(.clk(clk), .rst(INT_RESET), .D(HammerDec_result), .Q(HammerDec_delayed), .en(DecResult_En));
+
+
+  // Result selector
+  wire [17:0] tmpSel;
+  mux2_x18 selEnc( .sel(Encode), .if0(HammerEnc_result), .if1(HammerEnc_mixed), .res(tmpSel) );
+  mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_mixed), .res(LastWord) );
+
+
   // Output buffers
   wire Zero_value, QEN1, QEN2;
   wire [17:0] LastWord;
