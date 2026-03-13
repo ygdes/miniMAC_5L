@@ -157,7 +157,7 @@ async def test_project(dut):
   for x in sequence:
     await input_parameter(x, Decode, dut)
     t = await output_parameter(dut)
-    print(str(i) + " : " + str(t))
+    print(str(i) + " : " + bin(i ^ t) + "  " + str(t))
     #assert t == i
     i = i+1
 
