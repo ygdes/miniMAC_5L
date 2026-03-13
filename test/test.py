@@ -3,7 +3,7 @@
 
 # Test the Hammer18 scrambler in direct, encoding and decoding modes.
 
-enable_bypass = False
+enable_bypass = True
 enable_encode = False
 enable_decode = True
 
@@ -127,7 +127,7 @@ async def test_project(dut):
   dut.uio_in.value = 0
 
   # Test in direct mode (mode=0)
-  if enable_bypass:
+  if enable_bypass == True:
     await reset_state(dut)  
     dut._log.info("Starting Direct Mode")
     for x in vectors:
@@ -141,7 +141,7 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 6)
 
   #  Test in encode mode (mode=Encode)
-  if enable_encode:
+  if enable_encode == True:
     await reset_state(dut)  
     dut._log.info("Starting Encode Mode")
     i = 10
@@ -153,7 +153,7 @@ async def test_project(dut):
       i = i+1
 
   #  mode=Decode
-  if enable_encode:
+  if enable_encode == True:
     await reset_state(dut)  
     dut._log.info("Starting Decode Mode")
     i = 10
