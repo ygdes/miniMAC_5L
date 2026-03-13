@@ -162,8 +162,9 @@ async def test_project(dut):
     for x in sequence:
       await input_parameter(x, Decode, dut)
       t = await output_parameter(dut)
-      print(str(i) + " : " + bin((1 << 20) + (i ^ t)) + "  " + str(t))
-      #assert t == i
+      # print(str(i) + " : " + bin((1 << 20) + (i ^ t)) + "  " + str(t)) # show bit difference
+      print(str(i) + " : " + str(t))
+      assert t == i
       i = i+1
 
   await ClockCycles(dut.clk, 6)
