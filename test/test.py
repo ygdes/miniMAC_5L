@@ -4,7 +4,7 @@
 # Test the Hammer18 scrambler in direct, encoding and decoding modes.
 
 enable_bypass = True
-enable_encode = False
+enable_encode = True
 enable_decode = True
 
 import cocotb
