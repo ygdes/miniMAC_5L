@@ -6,6 +6,7 @@
 enable_bypass = True
 enable_encode = True
 enable_decode = True
+enable_loopback = True
 
 import cocotb
 from cocotb.clock import Clock
@@ -167,5 +168,17 @@ async def test_project(dut):
       assert t == i
       i = i+1
 
+  #  mode=Loopback
+  if enable_loopback == True:
+    await reset_state(dut)  
+    dut._log.info("Starting Loopback Mode")
+    for x in sequence:
+      await input_parameter(x, Decode, dut)
+      t = await output_parameter(dut)
+      # print(str(i) + " : " + bin((1 << 20) + (i ^ t)) + "  " + str(t)) # show bit difference
+      print(str(x) + " : " + str(t))
+      assert t == c
+
+  
   await ClockCycles(dut.clk, 6)
   dut._log.info("Done.")
