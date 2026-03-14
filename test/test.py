@@ -177,7 +177,7 @@ async def test_project(dut):
       t = await output_parameter(dut)
       # print(str(i) + " : " + bin((1 << 20) + (i ^ t)) + "  " + str(t)) # show bit difference
       print(str(x) + " : " + str(t))
-      assert t == c
+      assert t == x
 
   
   await ClockCycles(dut.clk, 6)
