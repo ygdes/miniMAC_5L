@@ -104,13 +104,11 @@ module tt_um_miniMAC (
 
 
   // Decoder
-  wire DecResult_En;
-  assign DecResult_En = QEN1;  //////////////////////////////////////////////////////////////// à changer après
-  wire DecNandEnc;
-  (* keep *) sg13g2_nand2_1 NandSel(.A(Encode), .B(Decode), .Y(DecNandEnc));
+  wire DecResult_En, Loopback_n;
   wire [17:0] HammerDec_operand, HammerDec_result, HammerDec_delayed, HammerDec_mixed;
-
-  mux2_x18 selOperand( .sel(DecNandEnc), .if0(HammerEnc_mixed), .if1(FirstWord), .res(HammerDec_operand) );
+  (* keep *) sg13g2_nand2_1 NandSel(.A(Encode), .B(Decode), .Y(Loopback_n));
+  (* keep *) sg13g2_mux2_1 selEncEn(.X(DecResult_En), .A0(EncResult_En), .A1(QEN1), S(Loopback_n));  // en mode loopback sélectionne EN en sortie de l'encodeur
+  mux2_x18 selOperand( .sel(Loopback_n), .if0(HammerEnc_mixed), .if1(FirstWord), .res(HammerDec_operand) );
   xor2_x18 mixDec(.A(HammerDec_operand), .B(HammerDec_delayed), .X(HammerDec_mixed) );
   Hammer18x4 HamDec(.I(HammerDec_mixed), .O(HammerDec_result));
   dffen_x18 delayDec(.clk(clk), .rst(INT_RESET), .D(HammerDec_result), .Q(HammerDec_delayed), .en(DecResult_En));
@@ -119,7 +117,7 @@ module tt_um_miniMAC (
   // Result selector
   wire [17:0] tmpSel;
   mux2_x18 selEnc( .sel(Encode), .if0(HammerEnc_result), .if1(HammerEnc_mixed), .res(tmpSel) );
-  mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_mixed), .res(LastWord) );
+  mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_mixed), .res(LastWord) );  ///////////////// à changer après
 
 
   // Output buffers
