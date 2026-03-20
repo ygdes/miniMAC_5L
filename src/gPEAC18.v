@@ -29,7 +29,7 @@ endmodule
 /* a 18-bit adder, I have no mapped/optimised version available (yet)
    and I have no time left for such detail */
 module Add18(
-    input  wire [17:0] A,
+    input  wire [17:0] A,
     input  wire [17:0] B, 
     output wire [17:0] S
   // carry out missing ?
