@@ -116,7 +116,7 @@ module Add18(
     input  wire [17:0] A,
     input  wire [17:0] B,
     input  wire        Cin,
-    output wire [17:0] S
+    output wire [17:0] S,
     output wire        Cout
   // carry out missing ?
 );
