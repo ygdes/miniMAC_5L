@@ -159,7 +159,7 @@ module gPEAC18_descrambler(
   input  wire rst,
   input  wire Enable,
   input  wire Phase,
-  input  wire [17:0] Scrambled_in // 0 < data < modulus
+  input  wire [17:0] Scrambled_in, // 0 < data < modulus
   output wire [16:0] Message_out, // C/D bit as Message_in[8]
   output wire Error
 );
