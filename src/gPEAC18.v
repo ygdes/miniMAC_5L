@@ -140,8 +140,8 @@ module gPEAC18_scrambler(
   wire [17:0] ResY;
   wire CinX, CinY, CoutX, CoutY, EnX, EnY;
 
-//  assign EnX = Phase0 or (Phase1 and );
-//  assign EnY = Phase0 or (Phase1 and );
+  (* keep *) sg13g2_or2_1  OrX(.X(EnX), .A(Phase0), .B(CoutX)); //  assign EnX = Phase0 or CoutX
+  (* keep *) sg13g2_or2_1  OrY(.X(EnY), .A(Phase0), .B(CoutY)); //  assign EnY = Phase0 or CoutY
 
   mux2_x18 mxX(.sel(Phase1), .if0({1'b0, Message_in}), .if1(X), .res(OPM));
   ConstAdjOrPass AdjY(.A(Y), .C(Phase1), .X(OPY));
@@ -168,7 +168,7 @@ module gPEAC18_descrambler(
   // Sticky error flag : pull rst low to clear
   wire error_transient, error_MSB, error_Modulus;
   Compare_modulus cmp(.A(Scrambled_in), .X(error_Modulus));
-  (* keep *) sg13g2_or3_1  ErrCom(.X(error_transient), .A(error_Modulus), .B(error_MSB), .C(Error));
+  (* keep *) sg13g2_or3_1  ErrCom(.X(error_transient), .A(error_Modulus), .B(error_MSB), .C(Error));  // à refaire
   (* keep *) sg13g2_dfrbpq_1 dffErr(.Q(Error), .D(error_transient), .RESET_B(rst), .CLK(clk));
 
   wire [17:0] A;
