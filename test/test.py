@@ -130,7 +130,7 @@ async def test_project(dut):
   dut.ui_in.value = 0
   dut.uio_in.value = 0
 
-  # Test in direct mode (mode=0)
+  # Test Hammer in direct mode (mode=0)
   if enable_bypass == True:
     await reset_state(dut)  
     dut._log.info("Starting Direct Mode")
@@ -144,7 +144,7 @@ async def test_project(dut):
       assert v == o
     await ClockCycles(dut.clk, 6)
 
-  #  Test in encode mode (mode=Encode)
+  #  Test Hammer in encode mode (mode=Encode)
   if enable_encode == True:
     await reset_state(dut)  
     dut._log.info("Starting Encode Mode")
@@ -156,7 +156,7 @@ async def test_project(dut):
       assert t == x
       i = i+1
 
-  #  mode=Decode
+  # Test Hammer in mode=Decode
   if enable_decode == True:
     await reset_state(dut)  
     dut._log.info("Starting Decode Mode")
@@ -169,7 +169,7 @@ async def test_project(dut):
       assert t == i
       i = i+1
 
-  #  mode=Loopback
+  # Test Hammer in mode=Loopback
   if enable_loopback == True:
     await reset_state(dut)  
     dut._log.info("Starting Loopback Mode")
@@ -180,7 +180,7 @@ async def test_project(dut):
       print(str(x) + " -> " + str(t))
       assert t == x
 
-  # mode loopback but testing the comparator
+  # mode=loopback but testing the comparator
   if enable_compare == True:
     await ClockCycles(dut.clk, 6)
     dut._log.info("Starting Comparator Mode")
