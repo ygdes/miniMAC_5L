@@ -7,7 +7,7 @@ enable_bypass = False
 enable_encode = False
 enable_decode = False
 enable_loopback = False
-#enable_compare  = False # just a debug that works for a while, no use for final circuit
+enable_compare  = False # just a debug that works for a while, no use for final circuit because it gets wired differenly
 
 import cocotb
 from cocotb.clock import Clock
