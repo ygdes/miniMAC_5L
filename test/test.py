@@ -7,7 +7,7 @@ enable_bypass = False
 enable_encode = False
 enable_decode = False
 enable_loopback = False
-enable_compare  = True
+#enable_compare  = False # just a debug that works for a while, no use for final circuit
 
 import cocotb
 from cocotb.clock import Clock
@@ -182,24 +182,15 @@ async def test_project(dut):
 
   # mode loopback but testing the comparator
   if enable_compare == True:
-    await reset_state(dut)  
-    dut._log.info("Starting Comparator Mode => 0")
-    #j=100
-    #for i in range(0, 258, 2): # 258114
-    #  await input_parameter(i, Decode+Encode, dut)
-    #  #if j == 0:
-    #  print(str(i) + " : " + str(dut.uio_out.value[3]))
-    #  #j=j-1
-    #  # the Zero flag should be 0
-
     await ClockCycles(dut.clk, 6)
-    dut._log.info("Starting Comparator Mode => 1")
+    dut._log.info("Starting Comparator Mode")
     await reset_state(dut)
     for i in range(256000, 262144, 2):
       await input_parameter(i, Decode+Encode, dut)
       print(str(i) + " : " + str(dut.uio_out.value[3]))
-      # the Zero flag should be 1 
-
+      # the Zero flag should be 1 when i >= 258144
+      # but there is a delay so it's checked in the VCD
+      # ænyway it's only a temporary test that will not work later
     await ClockCycles(dut.clk, 6)
 
   
