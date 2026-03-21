@@ -38,24 +38,24 @@ module xor2_x18(
   input  wire [17:0] B,
   output wire [17:0] X
 );
-  (* keep *) sg13g2_xor2_1 x00(.X(X[ 0]), .A(A[ 0]), .B(B[ 0]));
-  (* keep *) sg13g2_xor2_1 x01(.X(X[ 1]), .A(A[ 1]), .B(B[ 1]));
-  (* keep *) sg13g2_xor2_1 x02(.X(X[ 2]), .A(A[ 2]), .B(B[ 2]));
-  (* keep *) sg13g2_xor2_1 x03(.X(X[ 3]), .A(A[ 3]), .B(B[ 3]));
-  (* keep *) sg13g2_xor2_1 x04(.X(X[ 4]), .A(A[ 4]), .B(B[ 4]));
-  (* keep *) sg13g2_xor2_1 x05(.X(X[ 5]), .A(A[ 5]), .B(B[ 5]));
-  (* keep *) sg13g2_xor2_1 x06(.X(X[ 6]), .A(A[ 6]), .B(B[ 6]));
-  (* keep *) sg13g2_xor2_1 x07(.X(X[ 7]), .A(A[ 7]), .B(B[ 7]));
-  (* keep *) sg13g2_xor2_1 x08(.X(X[ 8]), .A(A[ 8]), .B(B[ 8]));
-  (* keep *) sg13g2_xor2_1 x09(.X(X[ 9]), .A(A[ 9]), .B(B[ 9]));
-  (* keep *) sg13g2_xor2_1 x10(.X(X[10]), .A(A[10]), .B(B[10]));
-  (* keep *) sg13g2_xor2_1 x11(.X(X[11]), .A(A[11]), .B(B[11]));
-  (* keep *) sg13g2_xor2_1 x12(.X(X[12]), .A(A[12]), .B(B[12]));
-  (* keep *) sg13g2_xor2_1 x13(.X(X[13]), .A(A[13]), .B(B[13]));
-  (* keep *) sg13g2_xor2_1 x14(.X(X[14]), .A(A[14]), .B(B[14]));
-  (* keep *) sg13g2_xor2_1 x15(.X(X[15]), .A(A[15]), .B(B[15]));
-  (* keep *) sg13g2_xor2_1 x16(.X(X[16]), .A(A[16]), .B(B[16]));
-  (* keep *) sg13g2_xor2_1 x17(.X(X[17]), .A(A[17]), .B(B[17]));
+  (* keep *) sg13g2_xor2_1 xo00(.X(X[ 0]), .A(A[ 0]), .B(B[ 0]));
+  (* keep *) sg13g2_xor2_1 xo01(.X(X[ 1]), .A(A[ 1]), .B(B[ 1]));
+  (* keep *) sg13g2_xor2_1 xo02(.X(X[ 2]), .A(A[ 2]), .B(B[ 2]));
+  (* keep *) sg13g2_xor2_1 xo03(.X(X[ 3]), .A(A[ 3]), .B(B[ 3]));
+  (* keep *) sg13g2_xor2_1 xo04(.X(X[ 4]), .A(A[ 4]), .B(B[ 4]));
+  (* keep *) sg13g2_xor2_1 xo05(.X(X[ 5]), .A(A[ 5]), .B(B[ 5]));
+  (* keep *) sg13g2_xor2_1 xo06(.X(X[ 6]), .A(A[ 6]), .B(B[ 6]));
+  (* keep *) sg13g2_xor2_1 xo07(.X(X[ 7]), .A(A[ 7]), .B(B[ 7]));
+  (* keep *) sg13g2_xor2_1 xo08(.X(X[ 8]), .A(A[ 8]), .B(B[ 8]));
+  (* keep *) sg13g2_xor2_1 xo09(.X(X[ 9]), .A(A[ 9]), .B(B[ 9]));
+  (* keep *) sg13g2_xor2_1 xo10(.X(X[10]), .A(A[10]), .B(B[10]));
+  (* keep *) sg13g2_xor2_1 xo11(.X(X[11]), .A(A[11]), .B(B[11]));
+  (* keep *) sg13g2_xor2_1 xo12(.X(X[12]), .A(A[12]), .B(B[12]));
+  (* keep *) sg13g2_xor2_1 xo13(.X(X[13]), .A(A[13]), .B(B[13]));
+  (* keep *) sg13g2_xor2_1 xo14(.X(X[14]), .A(A[14]), .B(B[14]));
+  (* keep *) sg13g2_xor2_1 xo15(.X(X[15]), .A(A[15]), .B(B[15]));
+  (* keep *) sg13g2_xor2_1 xo16(.X(X[16]), .A(A[16]), .B(B[16]));
+  (* keep *) sg13g2_xor2_1 xo17(.X(X[17]), .A(A[17]), .B(B[17]));
 endmodule
 
 module dffen_x18(
