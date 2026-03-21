@@ -88,8 +88,36 @@ module Add18(
     input  wire        Cin,
     output wire [17:0] S,
     output wire        Cout
-  // carry out missing ?
 );
   wire dummy;
   assign { Cout, S, dummy } = { 1'b0, A, 1'b1 } + { 1'b0, B, Cin};
 endmodule
+
+module Register_InitX(
+  input  wire clk,
+  input  wire rst,
+  input  wire en,
+  input  wire [17:0] D,
+  output wire [17:0] Q  
+);
+  wire [17:0] S, R;
+  // Init_X = "1011 0110 1110 110 111"
+  assign S = { rst,1'b1,rst, rst,   1'b1,rst,rst,1'b1,  rst, rst, rst, 1'b1,  rst, rst, 1'b1,  rst, rst, rst };
+  assign R = { 1'b1,rst,1'b1,1'b1,  rst,1'b1,1'b1,rst,  1'b1,1'b1,1'b1,rst,   1'b1,1'b1,rst,   1'b1,1'b1,1'b1};
+  dffen_rs_x18 register(.clk(clk), .rst(R), .set(S), .en(en), .D(D), .Q(Q));
+endmodule
+
+module Register_InitY(
+  input  wire clk,
+  input  wire rst,
+  input  wire en,
+  input  wire [17:0] D,
+  output wire [17:0] Q  
+);
+  wire [17:0] S, R;
+  // Init_Y = "01 101  101 0 101 101 101"
+  assign S = { 1'b1,rst,   rst, 1'b1,rst,   rst, 1'b1,rst,    1'b1,  rst, 1'b1,rst,   rst, 1'b1,rst,   rst, 1'b1,rst  };
+  assign R = { rst, 1'b1,  1'b1,rst, 1'b1,  1'b1,rst, 1'b1,   rst,   1'b1,rst, 1'b1,  1'b1,rst, 1'b1,  1'b1,rst, 1'b1 };
+  dffen_rs_x18 register(.clk(clk), .rst(R), .set(S), .en(en), .D(D), .Q(Q));
+endmodule
+
