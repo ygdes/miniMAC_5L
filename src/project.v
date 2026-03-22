@@ -49,14 +49,31 @@ module tt_um_miniMAC (
 
   // resynch the reset signal
   wire INT_RESET;
-    (* keep *) sg13g2_dfrbpq_1 DFF_reset(.Q(INT_RESET), .D(ena), .RESET_B(rst_n), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 DFF_reset(.Q(INT_RESET), .D(ena), .RESET_B(rst_n), .CLK(clk));
 
   // Pipeline management
-  wire Den_In0, Den_In1, Den_OK;
+  wire Din_OK, Dout_OK;
+  wire [17:0] FirstWord;
+  wire [17:0] LastWord;
+
+  input_demux dmx(
+    .clk(clk), .rst(rst), .DEN(DEN), .Din9(Din9),
+    .Din_OK(Din_OK), .FirstWord(FirstWord));
+
+
+  assign LastWord = FirstWord;
+  assign Dout_OK = Din_OK;
+  
+  output_muxer mxr(
+    .clk(clk), .rst(rst), .Dout_OK(Dout_OK), .LastWord(LastWord),
+    .Zero(Zero), .QEN(QEN), .Dout9(Dout9));
+
+endmodule
+
+
+/*
 //       Stage_Encode1, Stage_Encode2,
 //       Stage_Decode1, Stage_Decode2;
-
-
   // Stage_Encode1 <= Den_OK, reset= Encode  sg13g2_dfrbpq_1
   // Stage_Encode2 <= Stage_Encode1
   //  Stage_Decode1_ <= Den_OK si decode, Stage_Encode2 si loopback  => mux + and2
@@ -64,36 +81,7 @@ module tt_um_miniMAC (
   // Stage_Decode2 <= Stage_Decode1
 
 
-  // Input buffers
-  wire [8:0]  FirstHalfWord;
-  wire [17:0] FirstWord;
-
-  // Den_In0 <= DEN        sg13g2_dfrbpq_1  / 49
-  (* keep *) sg13g2_dfrbpq_1 DFF_den0(.Q(Den_In0), .D(DEN), .RESET_B(INT_RESET), .CLK(clk));
-  // Den_In1 <= ~Den_In0
-  /* verilator lint_off PINCONNECTEMPTY */
-  (* keep *) sg13g2_dfrbp_2 DFF_den1(.Q_N(Den_In1), .Q(), .D(Den_In0), .RESET_B(INT_RESET), .CLK(clk));
-  /* verilator lint_on PINCONNECTEMPTY */
-  // Den_OK <= Den_In0 & ~Den_In1  sg13g2_and2_2
-  (* keep *) sg13g2_and2_1 Den_OK_and2(.X(Den_OK), .A(Den_In0), .B(Den_In1));
-
-  dff_x9    fhw(.clk(clk), .rst(INT_RESET), .D(Din9), .Q(FirstHalfWord));                           // Always samples the input
-  dffen_x18  fw(.clk(clk), .rst(INT_RESET), .D({Din9, FirstHalfWord}), .Q(FirstWord), .en(Den_OK)); // Samples only if DEN is ok
-
-/*
-  // Multi-mode Hammer18 unit
-  wire DecOrEnc;
-  (* keep *) sg13g2_or2_1 OrSel(.A(Encode), .B(Decode), .X(DecOrEnc));
-  wire [17:0] Hammer_operand, Hammer_result, Hammer_delayed, Hammer_mixed;
-  mux2_x18 selOperand(.sel(Decode), .if0(FirstWord), .if1(Hammer_mixed), .res(Hammer_operand));
-  Hammer18x4 Ham(.I(Hammer_operand), .O(Hammer_result));
-  dffen_x18 delayHam(.clk(clk), .rst(INT_RESET), .D(Hammer_result), .Q(Hammer_delayed), .en(QEN1));
-  xor2_x18 mixData(.A(FirstWord), .B(Hammer_delayed), .X(Hammer_mixed) );
-  mux2_x18 selResult( .sel(DecOrEnc), .if0(Hammer_result), .if1(Hammer_mixed), .res(LastWord) );
-*/
-
-
-  // Encoder
+  // Hammer Encoder
   wire EncResult_En;
   assign EncResult_En = QEN1;  //////////////////////////////////////////////////////////////// à changer après
   wire [17:0] HammerEnc_operand, HammerEnc_result, HammerEnc_delayed, HammerEnc_mixed;
@@ -119,33 +107,18 @@ module tt_um_miniMAC (
   wire [17:0] tmpSel;
   mux2_x18 selEnc( .sel(Encode), .if0(HammerEnc_result), .if1(HammerEnc_mixed), .res(tmpSel) );
   mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_mixed), .res(LastWord) );  ///////////////// à changer après
-
-
-  // Output buffers
-  wire Zero_value, QEN1, QEN2;
-  wire [17:0] LastWord;
-  wire [8:0]  LastHalfWord, LastMSB;
-
-  // shift register : Den_OK => QEN1 => QEN2
-    // sélectionner entre Den_OK, EN_ENC et EN_DEC ici...
-  (* keep *) sg13g2_dfrbpq_1 DFF_QEN1(.Q(QEN1), .D(Den_OK), .RESET_B(INT_RESET), .CLK(clk));
-  (* keep *) sg13g2_dfrbpq_1 DFF_QEN2(.Q(QEN2), .D(QEN1),   .RESET_B(INT_RESET), .CLK(clk));
-  assign QEN = QEN2;
-
-  // Zero flag is 1 when all the 16 data bits are 0:
-  // nor16 zo16(.A({LastWord[16:9], LastWord[7:0]}), .X(Zero_value));   // does not NOR the C/D bit!)
-
-  // temporary test of the comparator
-  Compare_modulus cmp(.A(LastWord), .X(Zero_value));
-
-  (* keep *) sg13g2_dfrbpq_1 DFF_sero(.Q(Zero), .D(Zero_value), .RESET_B(INT_RESET), .CLK(clk));  // Latch & output the sum
-
-  // Multiplex the last half words:
-  dff_x9 dffMSB(.D(LastWord[17:9]), .Q(LastMSB), .clk(clk), .rst(INT_RESET)); // save the MSB for the next cycle
-  a22o_fo_x9 sel2(.A1(QEN1), .A2(LastWord[8:0]),  // LSB first
-                  .B1(QEN2), .B2(LastMSB),        // then MSB
-                  .Y(LastHalfWord));              // otherwise 0
-  dff_x9 dffOut(.D(LastHalfWord), .Q(Dout9), .clk(clk), .rst(INT_RESET));  // Latch & output the data halfword
+*/
 
   
-endmodule
+/* even older code
+  // Multi-mode Hammer18 unit
+  wire DecOrEnc;
+  (* keep *) sg13g2_or2_1 OrSel(.A(Encode), .B(Decode), .X(DecOrEnc));
+  wire [17:0] Hammer_operand, Hammer_result, Hammer_delayed, Hammer_mixed;
+  mux2_x18 selOperand(.sel(Decode), .if0(FirstWord), .if1(Hammer_mixed), .res(Hammer_operand));
+  Hammer18x4 Ham(.I(Hammer_operand), .O(Hammer_result));
+  dffen_x18 delayHam(.clk(clk), .rst(INT_RESET), .D(Hammer_result), .Q(Hammer_delayed), .en(QEN1));
+  xor2_x18 mixData(.A(FirstWord), .B(Hammer_delayed), .X(Hammer_mixed) );
+  mux2_x18 selResult( .sel(DecOrEnc), .if0(Hammer_result), .if1(Hammer_mixed), .res(LastWord) );
+*/
+
