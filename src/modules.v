@@ -248,11 +248,41 @@ module nor16(
   (* keep *) sg13g2_and4_1 and4(.X(X), .A(t[0]), .B(t[1]), .C(t[2]), .D(t[3]));
 endmodule
 
+// de-multiplex the 18-bit word
+module input_demux(
+  input wire clk,
+  input wire rst,
+  input wire DEN,
+  input wire [8:0] Din9,
 
+  output wire Din_OK,
+  output wire [17:0] FirstWord;
+);
+  wire Den_In0, Den_In1, valid;
+
+  // Input / resynch buffers
+  wire [8:0]  FirstHalfWord;
+  // Den_In0 <= DEN        sg13g2_dfrbpq_1  / 49
+  (* keep *) sg13g2_dfrbpq_1 DFF_den0(.Q(Den_In0), .D(DEN), .RESET_B(rst), .CLK(clk));
+  // Den_In1 <= ~Den_In0
+  /* verilator lint_off PINCONNECTEMPTY */
+  (* keep *) sg13g2_dfrbp_2 DFF_den1(.Q_N(Den_In1), .Q(), .D(Den_In0), .RESET_B(rst), .CLK(clk));
+  /* verilator lint_on PINCONNECTEMPTY */
+  // Din_OK <= Den_In0 & ~Den_In1  sg13g2_and2_2
+  (* keep *) sg13g2_and2_1 Din_and2(.X(Din_OK), .A(Den_In0), .B(Den_In1));
+  // The data buffers
+  (* keep *) sg13g2_dfrbpq_1 DFF_val(.Q(Din_OK), .D(valid), .RESET_B(rst), .CLK(clk));
+  dff_x9    fhw(.clk(clk), .rst(rst), .D(Din9), .Q(FirstHalfWord));                           // Always samples the input
+  dffen_x18  fw(.clk(clk), .rst(rst), .D({Din9, FirstHalfWord}), .Q(FirstWord), .en(valid)); // Samples only if DEN is ok (going from low to high)
+endmodule
+
+  
 // re-multiplex the 18-bit word
 module output_muxer(
-  input wire [17:0] LastWord,
+  input wire clk,
+  input wire rst,
   input wire Dout_OK,
+  input wire [17:0] LastWord,
 
   output wire Zero,
   output wire QEN,
@@ -262,17 +292,17 @@ module output_muxer(
   wire [8:0]  LastHalfWord, LastMSB;
 
   // shift register : Dout_OK => QEN1 => QEN
-  (* keep *) sg13g2_dfrbpq_1 DFF_QEN1(.Q(QEN1), .D(Dout_OK), .RESET_B(INT_RESET), .CLK(clk));
-  (* keep *) sg13g2_dfrbpq_1 DFF_QEN2(.Q(QEN ), .D(QEN1),    .RESET_B(INT_RESET), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 DFF_QEN1(.Q(QEN1), .D(Dout_OK), .RESET_B(rst), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 DFF_QEN2(.Q(QEN ), .D(QEN1),    .RESET_B(rst), .CLK(clk));
 
   // Zero flag is 1 when all the 16 data bits are 0:
   nor16 zo16(.A({LastWord[16:9], LastWord[7:0]}), .X(Zero_value));   // does not NOR the C/D bit!
-  (* keep *) sg13g2_dfrbpq_1 DFF_sero(.Q(Zero), .D(Zero_value), .RESET_B(INT_RESET), .CLK(clk));  // Latch & output the "sum"
+  (* keep *) sg13g2_dfrbpq_1 DFF_sero(.Q(Zero), .D(Zero_value), .RESET_B(rst), .CLK(clk));  // Latch & output the "sum"
 
   // Multiplex the last half words:
-  dff_x9 dffMSB(.D(LastWord[17:9]), .Q(LastMSB), .clk(clk), .rst(INT_RESET)); // save the MSB for the next cycle
+  dff_x9 dffMSB(.D(LastWord[17:9]), .Q(LastMSB), .clk(clk), .rst(rst)); // save the MSB for the next cycle
   a22o_fo_x9 sel2(.A1(QEN1), .A2(LastWord[8:0]),  // LSB first
                   .B1(QEN ), .B2(LastMSB),        // then MSB
                   .Y(LastHalfWord));              // otherwise 0
-  dff_x9 dffOut(.D(LastHalfWord), .Q(Dout9), .clk(clk), .rst(INT_RESET));  // Latch & output the data halfword
+  dff_x9 dffOut(.D(LastHalfWord), .Q(Dout9), .clk(clk), .rst(rst));  // Latch & output the data halfword
 endmodule
