@@ -63,7 +63,7 @@ module tt_um_miniMAC (
 
   // gPEAC then Hammer encoder:
   wire gPEAC_phase1;
-  wire [17:0] scrambled;
+    wire [17:0] scrambled, HammerEnc_result;
 
   // pipeline : Din_OK---[]---gPEAC_phase1---[]---Dout_OK
   //             \__phase0       \__phase1
@@ -72,11 +72,14 @@ module tt_um_miniMAC (
 
   gPEAC18_scrambler emPEAC(
      .clk(clk), .rst(INT_RESET), .Phase0(Din_OK), .Phase1(gPEAC_phase1),
-     .Message_in(FirstWord), .X(scrambled));
+     .Message_in(FirstWord[16:0]), .X(scrambled));
 
   Encode_Hamming_early Henc(
       .clk(clk), .rst(INT_RESET), .HammEn(Dout_OK),
-      .HammIn(scrambled), .HammOut(LastWord) );
+      .HammIn(scrambled), .HammOut(HammerEnc_result) );
+
+  // prevent a lot of warnings due to narrower input
+  mux2_x18 selEnc( .sel(Encode), .if0(FirstWord), .if1(HammerEnc_result), .res(LastWord) );
 
 
   output_muxer mxr(
