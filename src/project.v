@@ -60,19 +60,61 @@ module tt_um_miniMAC (
     .clk(clk), .rst(INT_RESET), .DEN(DEN), .Din9(Din9),
     .Din_OK(Din_OK), .FirstWord(FirstWord));
 
+
+  // gPEAC then Hammer encoder:
+  wire gPEAC_phase1;
+  wire [17:0] scrambled;
+
+  // pipeline : Din_OK---[]---gPEAC_phase1---[]---Dout_OK
+  //             \__phase0       \__phase1
+  (* keep *) sg13g2_dfrbpq_1 dff_enc1(.Q(gPEAC_phase1),  .D(Din_OK), .RESET_B(INT_RESET), .CLK(clk));
+  (* keep *) sg13g2_dfrbpq_1 dff_enc2(.Q(Dout_OK), .D(gPEAC_phase1), .RESET_B(INT_RESET), .CLK(clk));
+
+  gPEAC18_scrambler emPEAC(
+     .clk(clk), .rst(INT_RESET), .Phase0(Din_OK), .Phase1(gPEAC_phase1),
+     .Message_in(FirstWord), .X(scrambled));
+
+  Encode_Hamming_early Henc(
+      .clk(clk), .rst(INT_RESET), .HammEn(Dout_OK),
+      .HammIn(scrambled), .HammOut(LastWord) );
+
+
+  output_muxer mxr(
+    .clk(clk), .rst(INT_RESET), .Dout_OK(Dout_OK), .LastWord(LastWord),
+    .Zero(Zero), .QEN(QEN), .Dout9(Dout9));
+endmodule
+
+
+/*
+  // only one Hammer encoder:
   Encode_Hamming_early Henc(
       .clk(clk), .rst(INT_RESET), .HammEn(Din_OK),
       .HammIn(FirstWord), .HammOut(LastWord) );
   assign Dout_OK = Din_OK;
-  
+
+Routing stats:
+  Utilisation  18.920 %
+  Wire length  17970 um
+Cell usage by Category
+  OR	xor2	82
+  Misc	dlygate4sd3	78
+  Flip Flops    dfrbpq sdfrbpq dfrbp	70
+  Buffer	buf	58
+  Inverter	inv	20
+  Combo Logic	a22oi	9
+  NOR	nor4	4
+  AND	and2 and4	2
+323 total cells (excluding fill and tap cells)
+*/
+
 /*
 Short circuit config :
   assign LastWord = FirstWord;
   assign Dout_OK = Din_OK;
 
 Routing stats:
-  Utilisation (%) 10.858 %
-  Wire length (um)  8629
+  Utilisation  10.858 %
+  Wire length  8629um
 Cell usage by Category:
   Fill	decap fill	1993
   Flip Flops	dfrbpq dfrbp sdfrbpq	52
@@ -85,10 +127,7 @@ Cell usage by Category:
 178 total cells (excluding fill and tap cells)
 */
 
-  output_muxer mxr(
-    .clk(clk), .rst(INT_RESET), .Dout_OK(Dout_OK), .LastWord(LastWord),
-    .Zero(Zero), .QEN(QEN), .Dout9(Dout9));
-endmodule
+
 
 
 /*
@@ -128,17 +167,3 @@ endmodule
   mux2_x18 selEnc( .sel(Encode), .if0(HammerEnc_result), .if1(HammerEnc_mixed), .res(tmpSel) );
   mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_mixed), .res(LastWord) );  ///////////////// à changer après
 */
-
-  
-/* even older code
-  // Multi-mode Hammer18 unit
-  wire DecOrEnc;
-  (* keep *) sg13g2_or2_1 OrSel(.A(Encode), .B(Decode), .X(DecOrEnc));
-  wire [17:0] Hammer_operand, Hammer_result, Hammer_delayed, Hammer_mixed;
-  mux2_x18 selOperand(.sel(Decode), .if0(FirstWord), .if1(Hammer_mixed), .res(Hammer_operand));
-  Hammer18x4 Ham(.I(Hammer_operand), .O(Hammer_result));
-  dffen_x18 delayHam(.clk(clk), .rst(INT_RESET), .D(Hammer_result), .Q(Hammer_delayed), .en(QEN1));
-  xor2_x18 mixData(.A(FirstWord), .B(Hammer_delayed), .X(Hammer_mixed) );
-  mux2_x18 selResult( .sel(DecOrEnc), .if0(Hammer_result), .if1(Hammer_mixed), .res(LastWord) );
-*/
-
