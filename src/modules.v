@@ -312,7 +312,7 @@ module Encode_Hamming_early(
     input wire rst,
     input wire HammEn,
     input wire [17:0] HammIn,
-    input wire [17:0] HammOut  
+    output wire [17:0] HammOut  
 );
   wire [17:0] HammerEnc_operand, HammerEnc_result, HammerEnc_delayed;
   Hammer18x4 HamEnc(.I(HammIn), .O(HammerEnc_result));
