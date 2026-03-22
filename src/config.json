@@ -45,6 +45,9 @@
   "//": "Don't put clock buffers on the outputs",
   "DESIGN_REPAIR_BUFFER_OUTPUT_PORTS": 0,
 
+  "//": "Essen's suggestion",
+  "DESIGN_REPAIR_REMOVE_BUFFERS": 0,
+
   "//": "Reduce wasted space",
   "TOP_MARGIN_MULT": 1,
   "BOTTOM_MARGIN_MULT": 1,
