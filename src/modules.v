@@ -259,7 +259,6 @@ module output_muxer(
   output wire [8:0] Dout9
 );
   wire Zero_value, QEN1;
-  wire [17:0] LastWord;
   wire [8:0]  LastHalfWord, LastMSB;
 
   // shift register : Dout_OK => QEN1 => QEN
