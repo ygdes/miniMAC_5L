@@ -57,15 +57,15 @@ module tt_um_miniMAC (
   wire [17:0] LastWord;
 
   input_demux dmx(
-    .clk(clk), .rst(rst), .DEN(DEN), .Din9(Din9),
+    .clk(clk), .rst(INT_RESET), .DEN(DEN), .Din9(Din9),
     .Din_OK(Din_OK), .FirstWord(FirstWord));
 
-
+  // short circuit
   assign LastWord = FirstWord;
   assign Dout_OK = Din_OK;
   
   output_muxer mxr(
-    .clk(clk), .rst(rst), .Dout_OK(Dout_OK), .LastWord(LastWord),
+    .clk(clk), .rst(INT_RESET), .Dout_OK(Dout_OK), .LastWord(LastWord),
     .Zero(Zero), .QEN(QEN), .Dout9(Dout9));
 
 endmodule
