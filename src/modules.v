@@ -268,8 +268,8 @@ module input_demux(
   /* verilator lint_off PINCONNECTEMPTY */
   (* keep *) sg13g2_dfrbp_2 DFF_den1(.Q_N(Den_In1), .Q(), .D(Den_In0), .RESET_B(rst), .CLK(clk));
   /* verilator lint_on PINCONNECTEMPTY */
-  // Din_OK <= Den_In0 & ~Den_In1  sg13g2_and2_2
-  (* keep *) sg13g2_and2_1 Din_and2(.X(Din_OK), .A(Den_In0), .B(Den_In1));
+  // valid <= Den_In0 & ~Den_In1  sg13g2_and2_2
+  (* keep *) sg13g2_and2_1 Din_and2(.X(valid), .A(Den_In0), .B(Den_In1));
   // The data buffers
   (* keep *) sg13g2_dfrbpq_1 DFF_val(.Q(Din_OK), .D(valid), .RESET_B(rst), .CLK(clk));
   dff_x9    fhw(.clk(clk), .rst(rst), .D(Din9), .Q(FirstHalfWord));                           // Always samples the input
