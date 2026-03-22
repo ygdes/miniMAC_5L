@@ -10,12 +10,13 @@
    Any number equal or above raises X */
 module Compare_modulus(
     input wire [17:0] A,
+    input wire En,
     output wire X
 );
   wire t1, t2, t3, t4, t5, t6, t7, _unused;
   assign _unused = A[0]; // The LSB has no effect.
   // first layer
-  (* keep *) sg13g2_and3_1 L1a3_1(.X(t1), .A(A[17]), .B(A[16]), .C(A[15]));
+  (* keep *) sg13g2_and4_1 L1a3_1(.X(t1), .A(A[17]), .B(A[16]), .C(A[15]), .D(En));
   (* keep *) sg13g2_and3_1 L1a3_2(.X(t2), .A(A[14]), .B(A[13]), .C(A[12]));
   (* keep *) sg13g2_or3_1  L1o3_1(.X(t3), .A(A[11]), .B(A[10]), .C(A[ 9]));
   (* keep *) sg13g2_or3_1  L1o3_2(.X(t4), .A(A[ 3]), .B(A[ 2]), .C(A[ 1]));
@@ -166,18 +167,22 @@ endmodule
 module gPEAC18_descrambler(
   input  wire clk,
   input  wire rst,
-  input  wire Enable,
-  input  wire Phase,
+  input  wire Phase0,
+  input  wire Phase1,
   input  wire [17:0] Scrambled_in, // 0 < data < modulus
-  output wire [16:0] Message_out, // C/D bit as Message_in[8]
+  output wire [17:0] Message_out, // C/D bit as Message_in[8], [17] should be 0
   output wire Error
 );
+  wire phases;
+  (* keep *) sg13g2_or2_1  OrPh(.X(phases), .A(Phase0), .B(Phase1));          //  phases = Phase0 or Phase1
 
   // Sticky error flag : pull rst low to clear
-  wire error_transient, error_MSB, error_Modulus;
-  Compare_modulus cmp(.A(Scrambled_in), .X(error_Modulus));
-  (* keep *) sg13g2_or3_1  ErrCom(.X(error_transient), .A(error_Modulus), .B(error_MSB), .C(Error));  // à refaire
+  wire error_transient, error_Modulus;
+  Compare_modulus cmp(.A(Scrambled_in), .En(Phase0), .X(error_Modulus));
+  (* keep *) sg13g2_or2_1  ErrCom(.X(error_transient), .A(error_Modulus), .B(Error));
   (* keep *) sg13g2_dfrbpq_1 dffErr(.Q(Error), .D(error_transient), .RESET_B(rst), .CLK(clk));
+
+
 
   wire [17:0] A;
   wire [17:0] B;
@@ -198,4 +203,7 @@ module gPEAC18_descrambler(
   ConstAdjOrPass AdjY(.A(T), .C(Phase), .X(OPT));
   Add18 AddB(.A(OPT), .B(B), .Cin(CinB), .S(ResB), .Cout(CoutB));
   Register_InitX RegB(.clk(clk), .rst(rst), .en(EnB), .D(ResB), .Q(B));  // EN à contrôler !
+
+  assign Message_out = A;
+  
 endmodule
