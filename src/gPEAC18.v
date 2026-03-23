@@ -185,8 +185,8 @@ module gPEAC18_descrambler(
   wire [17:0] OPT;
   wire [17:0] ResA;
   wire [17:0] ResB;
-  wire CA, CB, CinA, CinB, CoutA, CoutB,
-       EnA, EnB;
+  wire CA, CAn, newCA, CinA, CoutA, EnA,
+       CB,      newCB, CinB, CoutB, EnB;
 
   // Sticky error flag : pull rst low to clear
   wire error_sum, error_Modulus;
@@ -197,22 +197,24 @@ module gPEAC18_descrambler(
   assign Message_out[16:0] = A[16:0];
 
   // A path:
-  mux2_x18 mxA(.sel(Phase0), .if0(Scrambled_in), .if1(A), .res(OPM));       //ok
-  ConstModOrNeg cmon(.A(B), .C(Phase1), .Y(OPB));                           //ok
-  // CinA = Phase & ...
+  mux2_x18 mxA(.sel(Phase0), .if0(Scrambled_in), .if1(A), .res(OPM));
+  ConstModOrNeg cmon(.A(B), .C(Phase1), .Y(OPB));
+  (* keep *) sg13g2_and2_1  AndA(.X(CinA), .A(Phase0), .B(CAn));            // CinA = (not CA) and Phase0;  ==> could be merged in the LSB of the adder !
   Add18 AddA(.A(OPM), .B(OPB), .Cin(CinA), .S(ResA), .Cout(CoutA));
+  
+  // newCA =
   // EnA = ....
   dffen_x18 RegA(.clk(clk), .rst(1'b1), .en(EnA), .D(ResA), .Q(A));  // No RESET, init random value gets flushed
-  // newCA =
-  (* keep *) sg13g2_sdfrbpq_1 dffA(.Q(CA), .D(CA), .SCD(newCA), .SCE(phases), .RESET_B(rst), .CLK(clk));
+  (* keep *) sg13g2_sdfrbp_1 dffA(.Q(CA), .Q_N(CAn), .D(CA), .SCD(newCA), .SCE(phases), .RESET_B(rst), .CLK(clk)); // inverted output to save an inverter
 
   // B path:
-  Register_InitX RegT( .clk(clk), .rst(rst), .en(Phase0), .D(Scrambled_in), .Q(T));  //ok
-  ConstAdjOrPass AdjY(.A(T), .C(Phase1), .X(OPT));                                   //ok
-  //   CinB =
+  Register_InitX RegT( .clk(clk), .rst(rst), .en(Phase0), .D(Scrambled_in), .Q(T));
+  ConstAdjOrPass AdjY(.A(T), .C(Phase1), .X(OPT));
+  (* keep *) sg13g2_and2_1  AndB(.X(CinB), .A(Phase0), .B(CB));                      // CinB = CB and Phase0;  ==> could be merged in the LSB of the adder !
   Add18 AddB(.A(OPT), .B(B), .Cin(CinB), .S(ResB), .Cout(CoutB));
+
+  // newCB =
   // EnB = ....
   Register_InitX RegB(.clk(clk), .rst(rst), .en(EnB), .D(ResB), .Q(B));
-  // newCB =
   (* keep *) sg13g2_sdfrbpq_1 dffB(.Q(CB), .D(CB), .SCD(newCB), .SCE(phases), .RESET_B(rst), .CLK(clk));
 endmodule
