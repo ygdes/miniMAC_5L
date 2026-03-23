@@ -87,13 +87,13 @@ module tt_um_miniMAC (
   (* keep *) sg13g2_dfrbpq_1 dff_dec1(.Q(dePEAC_phase1), .D(dePEAC_phase0), .RESET_B(INT_RESET), .CLK(clk));
   (* keep *) sg13g2_dfrbpq_1 dff_dec2(.Q(dePEAC_phase2), .D(dePEAC_phase1), .RESET_B(INT_RESET), .CLK(clk));
 
-
-assign descrambled = scrambled; //////////////////////////////////////////////////////////////////////////////////
-
+  gPEAC18_descrambler dePEAC(
+      .clk(clk), .rst(INT_RESET), .Phase0(dePEAC_phase0), .Phase1(dePEAC_phase1),
+      .Scrambled_in(scrambled_in), .Message_out(descrambled));   // C/D bit as Message_out[8], [17] is error
 
   // Select the output
   mux2_x18 selDest( .sel(Encode), .if0(descrambled), .if1(scrambled), .res(LastWord) );
-  (* keep *) sg13g2_mux2_2 selDestpulse(.S(Encode), .A0(Din_OK), .A1(emPEAC_phase2), .X(Dout_OK));
+  (* keep *) sg13g2_mux2_2 selDestpulse(.S(Encode), .A0(dePEAC_phase2), .A1(emPEAC_phase2), .X(Dout_OK));
 
 
   output_muxer mxr(
