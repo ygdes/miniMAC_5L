@@ -189,7 +189,7 @@ module gPEAC18_descrambler(
        CB,      newCB, CinB, CoutB, EnB;
 
   // Sticky error flag : pull rst low to clear
-  wire error_sum, error_Modulus;
+  wire error_sum, error_Modulus, Error;
   Compare_modulus cmp(.A(Scrambled_in), .En(Phase0), .X(error_Modulus));
   (* keep *) sg13g2_or2_1  ErrCombo(.X(error_sum), .A(error_Modulus), .B(Error));
   (* keep *) sg13g2_dfrbpq_1 dffErr(.Q(Error), .D(error_sum), .RESET_B(rst), .CLK(clk));
