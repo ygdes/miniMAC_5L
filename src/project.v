@@ -81,6 +81,8 @@ module tt_um_miniMAC (
   // Scrambler
   wire [17:0] scrambled, HammerEnc_result;
   wire emPEAC_phase1, emPEAC_phase2;
+
+  /* this does not work ??
   // pipeline : Din_OK---[]---emPEAC_phase1---[]---emPEAC_phase2
   //              \__phase0       \__phase1
   (* keep *) sg13g2_dfrbpq_1 dff_enc1(.Q(emPEAC_phase1), .D(Din_OK      ), .RESET_B(INT_RESET), .CLK(clk));
@@ -88,6 +90,12 @@ module tt_um_miniMAC (
   gPEAC18_scrambler emPEAC(
       .clk(clk), .rst(INT_RESET), .Phase0(Din_OK), .Phase1(emPEAC_phase1),
       .Message_in(FirstWord[16:0]), .X(scrambled));
+  */
+  // emergency short-cut
+  assign emPEAC_phase1 = Din_OK;
+  assign emPEAC_phase2 = emPEAC_phase1; // filling the gaps
+  assign scrambled     = FirstWord;
+
 
   Encode_Hamming_early Henc(
       .clk(clk), .rst(INT_RESET), .HammEn(emPEAC_phase2),
@@ -101,17 +109,24 @@ module tt_um_miniMAC (
   //                                      \__phase0            \__phase1
   mux2_x18 selDec( .sel(Decode), .if0(scrambled), .if1(FirstWord), .res(scrambled_in) );
   (* keep *) sg13g2_mux2_2 sel_src(.S(Decode), .A0(Din_OK), .A1(emPEAC_phase2), .X(dePEAC_phase0));
+
+  /*  pipeline : short-circuited
   (* keep *) sg13g2_dfrbpq_1 dff_dec1(.Q(dePEAC_phase1), .D(dePEAC_phase0), .RESET_B(INT_RESET), .CLK(clk));
   (* keep *) sg13g2_dfrbpq_1 dff_dec2(.Q(dePEAC_phase2), .D(dePEAC_phase1), .RESET_B(INT_RESET), .CLK(clk));
+  */
+  assign dePEAC_phase1 = dePEAC_phase0;
+  assign dePEAC_phase2 = dePEAC_phase1; // filling the gaps
+  assign descrambled = HammerDec_result;
 
   Decode_Hamming_early Hdec(
       .clk(clk), .rst(INT_RESET), .HammEn(dePEAC_phase0),
       .HammIn(scrambled_in), .HammOut(HammerDec_result) );
-  
+
+  /* doesn't work ?
   gPEAC18_descrambler dePEAC(
       .clk(clk), .rst(INT_RESET), .Phase0(dePEAC_phase0), .Phase1(dePEAC_phase1),
       .Scrambled_in(HammerDec_result), .Message_out(descrambled));   // C/D bit as Message_out[8], [17] is error
-
+  */
 
   // Select the output
   mux2_x18 selDest( .sel(Encode), .if0(descrambled), .if1(HammerEnc_result), .res(LastWord) );
