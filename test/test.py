@@ -3,7 +3,8 @@
 
 # Test the Hammer18 & gPEAC scrambler & descrambler in direct, encoding and decoding modes.
 
-Scrambling_direct = True
+Scrambling_direct = False
+Scrambling_loopback = True
 
 # now unused:
 enable_bypass = False
@@ -266,6 +267,18 @@ async def test_project(dut):
       await input_parameter(0, Encode, dut)  # Encode mode
       o = await output_parameter(dut)
       print("expected "+ bin(v + (1 << 20)) +" - found " + bin(o + (1 << 20)))
+      #assert v == o
+    await ClockCycles(dut.clk, 6)
+
+  if Scrambling_loopback == True:
+    await reset_state(dut)  
+    dut._log.info("Scrambling/descrambling Mode")
+    for x in range(0, 20):
+      #v = int(x,2)
+      #print("testing " + x[0] + " => " + x[1]);
+      await input_parameter(0, 0, dut)  # loopback mode
+      o = await output_parameter(dut)
+      print("found " + bin(o + (1 << 20)))
       #assert v == o
     await ClockCycles(dut.clk, 6)
 
