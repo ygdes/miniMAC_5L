@@ -203,7 +203,7 @@ module gPEAC18_descrambler(
   Add18 AddA(.A(OPM), .B(OPB), .Cin(CinA), .S(ResA), .Cout(CoutA));
   // newCA = CoutA when phase0 => handled in the SDFF
   (* keep *) sg13g2_a21o_2 en_a(.X(EnA), .A1(CA), .A2(Phase1), .B1(Phase0));  // EnA = phase0 or (phase1 and CA)   ==> A21O
-  dffen_x18 RegA(.clk(clk), .rst(1'b1), .en(EnA), .D(ResA), .Q(A));  // No RESET, init random value gets flushed
+  dffen_x18 RegA(.clk(clk), .rst(rst), .en(EnA), .D(ResA), .Q(A));  // No RESET, init random value gets flushed (but sim fails otherwise)
   (* keep *) sg13g2_sdfrbp_1 dffA(.Q(CA), .Q_N(CAn), .D(CA), .SCD(CoutA), .SCE(Phase0), .RESET_B(rst), .CLK(clk)); // inverted output to save an inverter
 
   // B path:
