@@ -308,10 +308,10 @@ module output_muxer(
 endmodule
 
 module Encode_Hamming_early(
-    input wire clk,
-    input wire rst,
-    input wire HammEn,
-    input wire [17:0] HammIn,
+    input  wire clk,
+    input  wire rst,
+    input  wire HammEn,
+    input  wire [17:0] HammIn,
     output wire [17:0] HammOut  
 );
   wire [17:0] HammerEnc_result, HammerEnc_delayed;
@@ -321,11 +321,11 @@ module Encode_Hamming_early(
 endmodule
 
 module Decode_Hamming_early(
-    input wire clk,
-    input wire rst,
-    input wire HammEn,
-    input wire [17:0] HammIn,
-    input wire [17:0] HammOut  
+    input  wire clk,
+    input  wire rst,
+    input  wire HammEn,
+    input  wire [17:0] HammIn,
+    output wire [17:0] HammOut  
 );
   wire [17:0] HammerDec_result, HammerDec_delayed;
   xor2_x18 mixDec(.A(HammIn), .B(HammerDec_delayed), .X(HammOut) );
