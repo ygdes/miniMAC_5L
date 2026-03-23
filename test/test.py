@@ -119,7 +119,7 @@ sequence = [ # for the Hammer18 tests
  134782,
  134777 ]  # index=19
 
-// "Golden" values output by VHDL when encoding 0
+# "Golden" values output by VHDL when encoding 0
 Scrambler_vectors=[
 "011011010101101101",
 "011001000100101100",
