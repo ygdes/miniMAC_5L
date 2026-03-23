@@ -265,7 +265,7 @@ async def test_project(dut):
       #print("testing " + x[0] + " => " + x[1]);
       await input_parameter(0, Encode, dut)  # Encode mode
       o = await output_parameter(dut)
-      print("expected "+ bin(v + (1 << 20))) +" - found " + bin(o + (1 << 20)))
+      print("expected "+ bin(v + (1 << 20)) +" - found " + bin(o + (1 << 20)))
       #assert v == o
     await ClockCycles(dut.clk, 6)
 
