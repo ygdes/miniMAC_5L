@@ -14,12 +14,18 @@ This unit (de)scrambles 16-bit data (+ a 17th bit for data/control framing). The
 
 This unit combines two bleeding-edge circuits:
 
-- the gPEAC18 unit is an additive-based scrambler that combines the 17 bits and creates an extra check bit.
+- the gPEAC18 unit is an additive-based scrambler that combines the 17 bits and creates an extra check bit. It uses 2 cycles too (to reuse the adders) so it matches the interface's throughput.
 
 - the Hammer18 unit is a bijective XOR-based scrambler that boosts the Hamming distance on the 18 bits at low Bit Error Rates.
 
 Together they provide a very strong and early error detection, tailored for early retransmition, saving costs, latency and bandwidth. Higher levels of the protocol will detect anomalous conditions and reset the link's state.
 
+## Performance
+
+Two tiles are required to fit both the encoder and decoder. They can be used alone (as either Encoder or Decoder) or in loopback mode (Encoder chained with Decoder) to verify the integrity of the circuits. Synthesis claims it can fly at 200MHz at 25°C but the interface is unlikely to be that fast. Anyway, even at 50MHz, the throughput is 450Mbps. Is that fast enough?
+
+So the target of one tile for the scrambler or descrambler is reached. It will be even lighter without the 9-bit interfaces and the loopback gates.
+
 ## What next?
 
-This is a VHDL to Verilog+IHP PDK port. I'll try to get 2 boards to test both coder and decoder in a chain, let's hope it works. Then maybe I'll have a decent PHY to test...
+This is a VHDL to Verilog+IHP PDK port. I'll try to get 2 boards to test both coder and decoder in a chain, to simulate noisy communications, let's hope it works. Then maybe I'll finally design a decent PHY ?
