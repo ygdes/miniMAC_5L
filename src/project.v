@@ -78,6 +78,7 @@ module tt_um_miniMAC (
 
   // deScrambler
   // pipeline : Din_OK/emPEAC_phase2=>dePEAC_phase0---[]---dePEAC_phase1---[]---dePEAC_phase2
+  //                                      \__phase0            \__phase1
   wire [17:0] scrambled_in;
   wire [17:0] descrambled;
   wire dePEAC_phase0, dePEAC_phase1, dePEAC_phase2;
