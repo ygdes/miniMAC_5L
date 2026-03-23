@@ -2,7 +2,24 @@
  * Copyright (c) 2026 Yann Guidon / whygee@f-cpu.org
  * SPDX-License-Identifier: Apache-2.0
  *
- *   Instantiate the Hammer18 Hamming Distance Maximiser
+ *   Instantiate the Hammer18 Hamming Distance Maximiser and the gPEAC18 scrambler/checksum
+
+Configuration : Full scrambler + descrambler with loopback @5ns, 80% density :
+
+Utilisation: 35.790 % (surface filled > 60% area)
+
+1316 total cells:
+OR            xor2 or2 or3                        250
+NOR           nor2 xnor2 nor2b nor3 nor4          229
+Flip Flops    dfrbpq sdfrbpq sdfbbp sdfrbp dfrbp  187
+Misc          dlygate4sd3                         186
+Buffer        buf                                 156
+Combo Logic   a21oi o21ai a22oi a221oi a21o       114
+Multiplexer   mux2                                 74
+NAND          nand2b nand2 nand3b                  64
+AND           and2 and4 and3                       33
+Inverter      inv                                  23
+ 
  */
 
 `default_nettype none
@@ -94,7 +111,6 @@ module tt_um_miniMAC (
   gPEAC18_descrambler dePEAC(
       .clk(clk), .rst(INT_RESET), .Phase0(dePEAC_phase0), .Phase1(dePEAC_phase1),
       .Scrambled_in(HammerDec_result), .Message_out(descrambled));   // C/D bit as Message_out[8], [17] is error
-
 
 
   // Select the output
