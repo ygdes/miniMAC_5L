@@ -1,3 +1,5 @@
+Note: despite the messy tapeout on iHP26a in March 2026, it's still under development.
+
 ## What is this miniMAC
 
 IMPORTANT: This custom circuit and protocol is not at all compliant or even compatible, even remotely linked to any 802.3 standard. It's all explained and detailed on Hackaday at https://hackaday.io/project/198914
