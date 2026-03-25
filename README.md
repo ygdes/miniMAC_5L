@@ -1,5 +1,7 @@
 !!! Warning !!! This project made it to the [iHP26a tapeout](https://app.tinytapeout.com/projects/3758) despite that version not working as intended !!!
 
+I'll have to check if/how it could still work as noise whitener 😊
+
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
 # Tiny Tapeout : the miniMAC unit
