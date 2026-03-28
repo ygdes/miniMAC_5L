@@ -37,7 +37,7 @@ module pipe_encode_Hammer(
 
   wire [17:0] HammerEnc_result;
   Encode_Hamming_early Henc(
-      .clk(clk), .rst(INT_RESET), .HammEn(Din_OK),
+      .clk(clk), .rst(rst), .HammEn(Din_OK),
       .HammIn(FirstWord), .HammOut(HammerEnc_result) );
 
   // Mux
