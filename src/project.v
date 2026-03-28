@@ -66,6 +66,7 @@ module tt_um_miniMAC (
   assign LastWord = FirstWord;
   assign Dout_OK = Din_OK;
 
+
   output_muxer mxr(
     .clk(clk), .rst(INT_RESET), .Dout_OK(Dout_OK), .LastWord(LastWord),
     .Zero(Zero), .QEN(QEN), .Dout9(Dout9));
