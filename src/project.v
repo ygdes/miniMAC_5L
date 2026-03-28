@@ -61,7 +61,7 @@ module tt_um_miniMAC (
     .clk(clk), .rst(INT_RESET), .DEN(DEN), .Din9(Din9),
     .Din_OK(Din_OK), .FirstWord(FirstWord));
 
-  pipe_encode_decode_loopback_Hammer pipe(
+  pipe_sans_Hammer pipe(
     .clk(clk), .rst(INT_RESET),
     .Encode(Encode), .Decode(Decode),
     .Din_OK(Din_OK), .FirstWord(FirstWord),
