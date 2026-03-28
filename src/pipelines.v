@@ -14,7 +14,7 @@ module pipe_empty(
   input wire Decode,
 
   input wire Din_OK,
-  input wire [17:0] FirstWord;
+  input wire [17:0] FirstWord,
 
   output wire Dout_OK,
   output wire [17:0] LastWord 
