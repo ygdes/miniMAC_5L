@@ -160,7 +160,7 @@ module pipe_sans_Hammer_gPEACencode(
       .HammIn(gPEACenc_result), .HammOut(HammerEnc_result) );
   
   mux2_x18 selEnc( .sel(Encode), .if0(FirstWord), .if1(HammerEnc_result), .res(tmpSel) );
-  (* keep *) sg13g2_mux2_2 selEncEn(.S(Encode), .A0(Din_OK), .A1(emPEAC_phase2), .X(Dout_OK));
+    (* keep *) sg13cmos5l_mux2_2 selEncEn(.S(Encode), .A0(Din_OK), .A1(emPEAC_phase2), .X(Dout_OK));
 
 // Decoding
   wire [17:0] HammerDec_result, HammerDec_operand;
