@@ -83,8 +83,6 @@ module pipe_encode_decode_loopback_Hammer(
   output wire Dout_OK,
   output wire [17:0] LastWord 
 );
-  wire _unused = &{ Decode, 1'b0};
-
   wire [17:0] HammerEnc_result, tmpSel;
   Encode_Hamming_early Henc(
       .clk(clk), .rst(rst), .HammEn(Din_OK),
@@ -92,9 +90,12 @@ module pipe_encode_decode_loopback_Hammer(
   mux2_x18 selEnc( .sel(Encode), .if0(FirstWord), .if1(HammerEnc_result), .res(tmpSel) );
 
   wire [17:0] HammerDec_result, HammerDec_operand;
+  wire DecOpSel;
+  (* keep *) sg13g2_and2_1 AndSel(.A(Encode), .B(Decode), .Y(DecOpSel));
+  mux2_x18 selOpDec( .sel(DecOpSel), .if0(FirstWord), .if1(HammerEnc_result), .res(HammerDec_operand) );
   Decode_Hamming_early Hdec(
       .clk(clk), .rst(rst), .HammEn(Din_OK),
-      .HammIn(FirstWord), .HammOut(HammerDec_result) );
+      .HammIn(HammerDec_operand), .HammOut(HammerDec_result) );
   mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_result), .res(LastWord) );
 
   assign Dout_OK = Din_OK;
