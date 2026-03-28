@@ -3,15 +3,13 @@
 
 # Test the Hammer18 & gPEAC scrambler & descrambler in direct, encoding and decoding modes.
 
-#too bad gPEAC doesn't work on time
-Scrambling_direct = False
-Scrambling_loopback = False
-
 enable_bypass = True
 enable_Hammer_encode = False
 enable_Hammer_decode = True
 enable_Hammer_loopback = False
 enable_compare  = False # just a debug that worked for a while, no use for final circuit because it gets wired differenly
+Scrambling_gPEAC_direct = True
+Scrambling_loopback = False
 
 import cocotb
 from cocotb.clock import Clock
@@ -251,7 +249,7 @@ async def test_project(dut):
   ######################################################################
   # The following code is used to test the whole Hammer+gPEAC circuit
 
-  if Scrambling_direct == True:
+  if Scrambling_gPEAC_direct == True:
     await reset_state(dut)  
     dut._log.info("Scrambling Mode")
     for x in Scrambler_vectors:
