@@ -7,7 +7,7 @@
 Scrambling_direct = False
 Scrambling_loopback = False
 
-enable_bypass = False  # not wired anymore
+enable_bypass = True
 enable_encode = False
 enable_decode = False
 enable_loopback = False
@@ -53,7 +53,6 @@ async def output_parameter(dut):
       assert false
       return -1
     await ClockCycles(dut.clk, 1)
-
   #print("waited " + str(timeout))  
   # LSB first:
   # print("phase0: " + str(dut.uio_out.value) + " : " + str(dut.uo_out.value))
@@ -191,7 +190,7 @@ async def test_project(dut):
   ######################################################################
   # The following code was used to test the standalone Hammer circuit
   
-  # Test Hammer in direct mode (mode=0)      Bypass is not available anymore
+  # Test Hammer in direct mode (mode=0)
   if enable_bypass == True:
     await reset_state(dut)  
     dut._log.info("Starting Direct Mode")
