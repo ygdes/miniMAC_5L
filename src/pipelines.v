@@ -149,8 +149,8 @@ module pipe_sans_Hammer_gPEACencode(
 
   // pipeline : Din_OK---[]---emPEAC_phase1---[]---emPEAC_phase2
   //              \__phase0       \__phase1
-  (* keep *) sg13cmos5l_dfrbpq_1 dff_enc1(.Q(emPEAC_phase1), .D(Din_OK       ), .RESET_B(INT_RESET), .CLK(clk));
-  (* keep *) sg13cmos5l_dfrbpq_1 dff_enc2(.Q(emPEAC_phase2), .D(emPEAC_phase1), .RESET_B(INT_RESET), .CLK(clk));
+    (* keep *) sg13cmos5l_dfrbpq_1 dff_enc1(.Q(emPEAC_phase1), .D(Din_OK       ), .RESET_B(rst), .CLK(clk));
+    (* keep *) sg13cmos5l_dfrbpq_1 dff_enc2(.Q(emPEAC_phase2), .D(emPEAC_phase1), .RESET_B(rst), .CLK(clk));
   gPEAC18_scrambler emPEAC(
       .clk(clk), .rst(rst), .Phase0(Din_OK), .Phase1(emPEAC_phase1),
       .Message_in(FirstWord[16:0]), .X(gPEACenc_result));
