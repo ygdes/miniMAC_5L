@@ -330,3 +330,26 @@ module Decode_Hamming_early(
   Hammer18x4 HamDec(.I(HammOut), .O(HammerDec_result));
   dffen_x18 delayDec(.clk(clk), .rst(rst), .D(HammerDec_result), .Q(HammerDec_delayed), .en(HammEn));
 endmodule
+
+
+module Encode_Hamming_empty(
+    input  wire clk,
+    input  wire rst,
+    input  wire HammEn,
+    input  wire [17:0] HammIn,
+    output wire [17:0] HammOut  
+);
+  wire _unused = &{ clk, rst, HammEn, 1'b0};
+  assign HammOut = HammIn;
+endmodule
+
+module Decode_Hamming_empty(
+    input  wire clk,
+    input  wire rst,
+    input  wire HammEn,
+    input  wire [17:0] HammIn,
+    output wire [17:0] HammOut  
+);
+  wire _unused = &{ clk, rst, HammEn, 1'b0};
+  assign HammOut = HammIn;
+endmodule
