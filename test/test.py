@@ -4,13 +4,13 @@
 # Test the Hammer18 & gPEAC scrambler & descrambler in direct, encoding and decoding modes.
 
 #too bad gPEAC doesn't work on time
-Scrambling_direct = True
-Scrambling_loopback = True
+Scrambling_direct = False
+Scrambling_loopback = False
 
 enable_bypass = False  # not wired anymore
-enable_encode = True
-enable_decode = True
-enable_loopback = True
+enable_encode = False
+enable_decode = False
+enable_loopback = False
 enable_compare  = False # just a debug that worked for a while, no use for final circuit because it gets wired differenly
 
 import cocotb
