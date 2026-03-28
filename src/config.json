@@ -13,12 +13,12 @@
 
   "//": "PL_TARGET_DENSITY_PCT - You can increase this if Global Placement fails with error GPL-0302.",
   "//": "Users have reported that values up to 80 worked well for them.",
-  "PL_TARGET_DENSITY_PCT": 78,
+  "PL_TARGET_DENSITY_PCT": 75,
 
   "//": "CLOCK_PERIOD - Increase this in case you are getting setup time violations.",
   "//": "The value is in nanoseconds, so 20ns == 50MHz.",
   "//": "5ns is fine for Hammer alone.",
-  "CLOCK_PERIOD": 5,
+  "CLOCK_PERIOD": 6,
 
   "//": "Hold slack margin - Increase them in case you are getting hold violations.",
   "PL_RESIZER_HOLD_SLACK_MARGIN": 0.1,
@@ -62,8 +62,8 @@
   "FP_IO_HLENGTH": 2,
   "FP_IO_VLENGTH": 2,
 
-  "FP_PDN_VPITCH": 38.87,
-
+  "FP_PDN_VPITCH": 50.0,
+  "FP_PDN_VWIDTH": 2.1,
   "//": "Clock",
   "RUN_CTS": 1,
 
