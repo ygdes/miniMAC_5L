@@ -68,7 +68,7 @@ module pipe_encode_decode_Hammer(
   Decode_Hamming_early Hdec(
       .clk(clk), .rst(INT_RESET), .HammEn(Din_OK),
       .HammIn(FirstWord), .HammOut(HammerDec_result) );
-  mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_mixed), .res(LastWord) );
+  mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_result), .res(LastWord) );
 
   assign Dout_OK = Din_OK;
 endmodule
