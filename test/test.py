@@ -55,7 +55,7 @@ async def output_parameter(dut):
     await ClockCycles(dut.clk, 1)
   #print("waited " + str(timeout))  
   # LSB first:
-  # print("phase0: " + str(dut.uio_out.value) + " : " + str(dut.uo_out.value))
+  print("phase0: " + str(dut.uio_out.value[0]) + " : " + str(dut.uo_out.value))
   val = int(dut.uo_out.value) + (int(dut.uio_out.value[0]) << 8)
   #print("uo=" + bin(int(dut.uo_out.value)) + "   uio=" + bin(int(dut.uio_out.value))  + "   QEN=" + str(dut.uio_out.value[1]))
   await ClockCycles(dut.clk, 1)
