@@ -1,6 +1,4 @@
-!!! Warning !!! This project made it to the [iHP26a tapeout](https://app.tinytapeout.com/projects/3758) despite the March version not working as intended !!!
-
-Unexpected dual-use coping strategy: I'll have to check if/how it could still work as noise whitener 😊
+This project is a newer version than the bork one in [iHP26a tapeout](https://app.tinytapeout.com/projects/3758) and it is ported to the less-featured CMOS5L PDK.
 
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
@@ -26,10 +24,8 @@ Together they provide a very strong and early error detection, tailored for earl
 
 ## Performance
 
-Two tiles are required to fit both the encoder and decoder. They can be used alone (as either Encoder or Decoder) or in loopback mode (Encoder chained with Decoder) to verify the integrity of the circuits. Synthesis claims it can fly at 200MHz at 25°C but the interface is unlikely to be that fast. Anyway, even at 50MHz, the throughput is 450Mbps. Is that fast enough?
-
-So the target of one tile for the scrambler or descrambler is reached. It will be even lighter without the 9-bit interfaces and the loopback gates.
+Two tiles are required to fit both the encoder and decoder. They can be used alone (as either Encoder or Decoder) or in loopback mode (Encoder chained with Decoder) to verify the integrity of the circuits. Synthesis claims it can fly at 200MHz at 25°C but the interface and the pins are unlikely to be that fast. Anyway, even at 50MHz, the throughput is 450Mbps. Is that fast enough? The target of one tile for the scrambler or descrambler is reached. It will be even lighter without the 9-bit interfaces and the loopback gates.
 
 ## What next?
 
-This is a VHDL to Verilog+IHP PDK port. I'll try to get 2 boards to test both coder and decoder in a chain, to simulate noisy communications, let's hope it works. Then maybe I'll finally design a decent PHY ?
+This is a VHDL to Verilog+IHP PDK port, using an experimental PDK still under development. Later versions would add a FSM, some buffer SRAM and a proper PHY interface (YGMII is being designed).
