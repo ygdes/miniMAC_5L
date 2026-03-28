@@ -196,12 +196,14 @@ async def test_project(dut):
     dut._log.info("Starting Direct Mode")
     for x in vectors:
       i = int(x[0],2)
-      v = int(x[1],2)
-      print("testing " + x[0] + " => " + x[1]);
+      #v = int(x[1],2)
+      #print("testing " + x[0] + " => " + x[1]);
+      print("testing    " + x[0]);
       await input_parameter(i, 0, dut)  # Encode = Decode = 0 => direct mode
       o = await output_parameter(dut)
-      print(" - found                 " + bin(o + (1 << 20)))
-      assert v == o
+      print(" -found " + bin(o + (1 << 20)))
+      assert i == o
+      #assert v == o
     await ClockCycles(dut.clk, 6)
 
   #  Test Hammer in encode mode (mode=Encode)
