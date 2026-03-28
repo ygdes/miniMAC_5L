@@ -118,6 +118,39 @@ sequence = [ # for the Hammer18 tests
  134777 ]  # index=19
 
 # "Golden" values output by VHDL when encoding 0
+gPEAC_vectors=[
+"011011010101101101", 
+"001010000011100010", 
+"100101011001010000", 
+"101111011100110010", 
+"010101110101000000", 
+"000110010000110001", 
+"011100000101110010", 
+"100010010110100011", 
+"111110011100010101", 
+"100001110001110110", 
+"100001001101001010", 
+"000011111101111111", 
+"100101001011001010", 
+"101001001001001001", 
+"001111010011010001", 
+"111000011100011011", 
+"001000101110101010", 
+"000010001010000100", 
+"001010111000101111", 
+"001101000010110011", 
+"010111111011100010", 
+"100100111110010101", 
+"111100111001110111", 
+"100010110111001010", 
+"100000110000000000", 
+"000100100110001001", 
+"100101010110001010", 
+"101001111100010011", 
+"010000010001011011", 
+"111010001101101111"
+];
+
 Scrambler_vectors=[
 "011011010101101101",
 "011001000100101100",
@@ -252,11 +285,12 @@ async def test_project(dut):
   if Scrambling_gPEAC_direct == True:
     await reset_state(dut)  
     dut._log.info("Scrambling Mode")
-    for x in Scrambler_vectors:
+    for x in gPEAC_vectors:
       v = int(x,2)
+      print("expected " + bin(v + (1 << 20)))
       await input_parameter(0, Encode, dut)  # Encode mode
       o = await output_parameter(dut)
-      print("expected "+ bin(v + (1 << 20)) +" - found " + bin(o + (1 << 20)))
+      print(" - found " + bin(o + (1 << 20)))
       #assert v == o
     await ClockCycles(dut.clk, 6)
 
