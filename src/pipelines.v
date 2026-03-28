@@ -58,13 +58,17 @@ module pipe_encode_decode_Hammer(
 );
   wire _unused = &{ Decode, 1'b0};
 
-  wire [17:0] HammerEnc_result;
+  wire [17:0] HammerEnc_result, tmpSel;
   Encode_Hamming_early Henc(
       .clk(clk), .rst(rst), .HammEn(Din_OK),
       .HammIn(FirstWord), .HammOut(HammerEnc_result) );
+  mux2_x18 selEnc( .sel(Encode), .if0(FirstWord), .if1(HammerEnc_result), .res(tmpSel) );
 
-  // Mux
-  mux2_x18 selEnc( .sel(Encode), .if0(FirstWord), .if1(HammerEnc_result), .res(LastWord) );
+  wire [17:0] HammerDec_result;
+  Decode_Hamming_early Hdec(
+      .clk(clk), .rst(INT_RESET), .HammEn(Din_OK),
+      .HammIn(FirstWord), .HammOut(HammerDec_result) );
+  mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_mixed), .res(LastWord) );
 
   assign Dout_OK = Din_OK;
 endmodule
