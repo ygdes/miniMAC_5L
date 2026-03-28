@@ -287,12 +287,11 @@ module output_muxer(
     output wire QEN,
     output wire [8:0] Dout9
 );
-  wire Zero_value, QEN1;
+  wire Zero_value;
   wire [8:0]  LastHalfWord, LastMSB;
 
-  // shift register : Dout_OK => QEN1 => QEN
-  (* keep *) sg13cmos5l_dfrbpq_1 DFF_QEN1(.Q(QEN1), .D(Dout_OK), .RESET_B(rst), .CLK(clk));
-  (* keep *) sg13cmos5l_dfrbpq_1 DFF_QEN2(.Q(QEN ), .D(QEN1),    .RESET_B(rst), .CLK(clk));
+  // shift register : Dout_OK => QEN
+  (* keep *) sg13cmos5l_dfrbpq_1 DFF_QEN(.Q(QEN), .D(Dout_OK), .RESET_B(rst), .CLK(clk));
 
   // Zero flag is 1 when all the 16 data bits are 0:
   nor16 zo16(.A({LastWord[16:9], LastWord[7:0]}), .X(Zero_value));   // does not NOR the C/D bit!
@@ -300,9 +299,9 @@ module output_muxer(
 
   // Multiplex the last half words:
   dff_x9 dffMSB(.D(LastWord[17:9]), .Q(LastMSB), .clk(clk), .rst(rst)); // save the MSB for the next cycle
-  a22o_fo_x9 sel2(.A1(QEN1), .A2(LastWord[8:0]),  // LSB first
-                  .B1(QEN ), .B2(LastMSB),        // then MSB
-                  .Y(LastHalfWord));              // otherwise 0
+  a22o_fo_x9 sel2(.A1(Dout_OK), .A2(LastWord[8:0]),  // LSB first
+                  .B1(QEN    ), .B2(LastMSB),        // then MSB
+                  .Y(LastHalfWord));                 // otherwise 0
   dff_x9 dffOut(.D(LastHalfWord), .Q(Dout9), .clk(clk), .rst(rst));  // Latch & output the data halfword
 endmodule
 
