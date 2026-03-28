@@ -198,7 +198,7 @@ async def test_project(dut):
       i = int(x[0],2)
       #v = int(x[1],2)
       #print("testing " + x[0] + " => " + x[1]);
-      print("testing    " + x[0]);
+      print("testing      " + x[0]);
       await input_parameter(i, 0, dut)  # Encode = Decode = 0 => direct mode
       o = await output_parameter(dut)
       print(" -found " + bin(o + (1 << 20)))
