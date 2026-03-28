@@ -41,7 +41,8 @@ module tt_um_miniMAC (
   assign uio_out[7:4] = 4'b0000;
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{uio_in[0], uio_in[1], uio_in[2], uio_in[3], 1'b0};
+  wire _unused = &{ Encode, Decode,
+     uio_in[0], uio_in[1], uio_in[2], uio_in[3], 1'b0};
 
 /////////////////////////////////////////////////////////////////////////////
 
