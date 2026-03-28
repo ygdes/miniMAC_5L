@@ -62,10 +62,11 @@ module tt_um_miniMAC (
     .clk(clk), .rst(INT_RESET), .DEN(DEN), .Din9(Din9),
     .Din_OK(Din_OK), .FirstWord(FirstWord));
 
- /* Short circuit config : */
-  assign LastWord = FirstWord;
-  assign Dout_OK = Din_OK;
-
+  pipe_empty pipe(
+    .clk(clk), .rst(INT_RESET),
+    .Encode(Encode), .Decode(Decode),
+    .Din_OK(Din_OK), .FirstWord(FirstWord),
+    .Dout_OK(Dout_OK), .LastWord(LastWord));
 
   output_muxer mxr(
     .clk(clk), .rst(INT_RESET), .Dout_OK(Dout_OK), .LastWord(LastWord),
