@@ -8,9 +8,9 @@ Scrambling_direct = False
 Scrambling_loopback = False
 
 enable_bypass = True
-enable_encode = False
-enable_decode = False
-enable_loopback = False
+enable_Hammer_encode = True
+enable_Hammer_decode = False
+enable_Hammer_loopback = False
 enable_compare  = False # just a debug that worked for a while, no use for final circuit because it gets wired differenly
 
 import cocotb
@@ -186,30 +186,24 @@ async def test_project(dut):
   dut.ena.value = 1
   dut.ui_in.value = 0
   dut.uio_in.value = 0
-
-  ######################################################################
-  # The following code was used to test the standalone Hammer circuit
   
-  # Test Hammer in direct mode (mode=0)
+  # Test bypass mode (mode=0)
   if enable_bypass == True:
     await reset_state(dut)  
-    dut._log.info("Starting Direct Mode")
+    dut._log.info("Starting bypass Mode")
     for x in vectors:
       i = int(x[0],2)
-      #v = int(x[1],2)
-      #print("testing " + x[0] + " => " + x[1]);
       print("testing      " + x[0]);
       await input_parameter(i, 0, dut)  # Encode = Decode = 0 => direct mode
       o = await output_parameter(dut)
       print(" -found " + bin(o + (1 << 20)))
       assert i == o
-      #assert v == o
     await ClockCycles(dut.clk, 6)
 
   #  Test Hammer in encode mode (mode=Encode)
-  if enable_encode == True:
+  if enable_Hammer_encode == True:
     await reset_state(dut)  
-    dut._log.info("Starting Encode Mode")
+    dut._log.info("Starting Hammer Encode Mode")
     i = 10
     for x in sequence:
       await input_parameter(i, Encode, dut)
@@ -219,30 +213,28 @@ async def test_project(dut):
       i = i+1
 
   # Test Hammer in mode=Decode
-  if enable_decode == True:
+  if enable_Hammer_decode == True:
     await reset_state(dut)  
-    dut._log.info("Starting Decode Mode")
+    dut._log.info("Starting Hammer Decode Mode")
     i = 10
     for x in sequence:
       await input_parameter(x, Decode, dut)
       t = await output_parameter(dut)
-      # print(str(i) + " : " + bin((1 << 20) + (i ^ t)) + "  " + str(t)) # show bit difference
       print(str(i) + " : " + str(t))
       assert t == i
       i = i+1
 
   # Test Hammer in mode=Loopback
-  if enable_loopback == True:
+  if enable_Hammer_loopback == True:
     await reset_state(dut)  
     dut._log.info("Starting Loopback Mode")
     for x in sequence:
       await input_parameter(x, 0, dut)
       t = await output_parameter(dut)
-      # print(str(i) + " : " + bin((1 << 20) + (i ^ t)) + "  " + str(t)) # show bit difference
       print(str(x) + " -> " + str(t))
       assert t == x
 
-  # mode=loopback but testing the comparator   /!\  Comparator is not exposed anymore   /!\
+  # mode=loopback but testing the comparator   /!\  Modulus Comparator is not exposed anymore   /!\
   if enable_compare == True:
     await ClockCycles(dut.clk, 6)
     dut._log.info("Starting Comparator Mode")
