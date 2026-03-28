@@ -2,8 +2,6 @@ Just a file to spill and store different experiments with the datapath/pipeline 
 
 
 
-
-
   // Scrambler
   wire [17:0] scrambled, HammerEnc_result;
   wire emPEAC_phase1, emPEAC_phase2;
