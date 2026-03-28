@@ -9,7 +9,7 @@ Scrambling_loopback = False
 
 enable_bypass = True
 enable_Hammer_encode = True
-enable_Hammer_decode = False
+enable_Hammer_decode = True
 enable_Hammer_loopback = False
 enable_compare  = False # just a debug that worked for a while, no use for final circuit because it gets wired differenly
 
