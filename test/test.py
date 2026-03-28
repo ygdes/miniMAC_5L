@@ -118,6 +118,8 @@ sequence = [ # for the Hammer18 tests
  134777 ]  # index=19
 
 # "Golden" values output by VHDL when encoding 0
+
+# ./gpeac18_scrambler_vectors --vcd=vectors.vcd -gPASSTHROUGH=1 -gvectors=30 |sed 's/.*: //'
 gPEAC_vectors=[
 "011011010101101101", 
 "001010000011100010", 
