@@ -142,21 +142,36 @@ module pipe_sans_Hammer_gPEACencode(
   output wire Dout_OK,
   output wire [17:0] LastWord 
 );
-  wire [17:0] HammerEnc_result, tmpSel;
-  Encode_Hamming_empty Henc(
-      .clk(clk), .rst(rst), .HammEn(Din_OK),
-      .HammIn(FirstWord), .HammOut(HammerEnc_result) );
-  mux2_x18 selEnc( .sel(Encode), .if0(FirstWord), .if1(HammerEnc_result), .res(tmpSel) );
 
+// Encoding
+  wire [17:0] HammerEnc_result, gPEACenc_result, tmpSel;
+  wire emPEAC_phase1, emPEAC_phase2;
+
+  // pipeline : Din_OK---[]---emPEAC_phase1---[]---emPEAC_phase2
+  //              \__phase0       \__phase1
+  (* keep *) sg13cmos5l_dfrbpq_1 dff_enc1(.Q(emPEAC_phase1), .D(Din_OK       ), .RESET_B(INT_RESET), .CLK(clk));
+  (* keep *) sg13cmos5l_dfrbpq_1 dff_enc2(.Q(emPEAC_phase2), .D(emPEAC_phase1), .RESET_B(INT_RESET), .CLK(clk));
+  gPEAC18_scrambler emPEAC(
+      .clk(clk), .rst(rst), .Phase0(Din_OK), .Phase1(emPEAC_phase1),
+      .Message_in(FirstWord[16:0]), .X(gPEACenc_result));
+
+  Encode_Hamming_empty Henc(
+      .clk(clk), .rst(rst), .HammEn(emPEAC_phase2),
+      .HammIn(gPEACenc_result), .HammOut(HammerEnc_result) );
+  
+  mux2_x18 selEnc( .sel(Encode), .if0(FirstWord), .if1(HammerEnc_result), .res(tmpSel) );
+  (* keep *) sg13g2_mux2_2 selEncEn(.S(Encode), .A0(Din_OK), .A1(emPEAC_phase2), .X(Dout_OK));
+
+// Decoding
   wire [17:0] HammerDec_result, HammerDec_operand;
   wire DecOpSel;
   (* keep *) sg13cmos5l_and2_1 AndSel(.A(Encode), .B(Decode), .X(DecOpSel));
   mux2_x18 selOpDec( .sel(DecOpSel), .if0(FirstWord), .if1(HammerEnc_result), .res(HammerDec_operand) );
-  Decode_Hamming_empty Hdec(
+  Decode_Hamming_early Hdec(
       .clk(clk), .rst(rst), .HammEn(Din_OK),
       .HammIn(HammerDec_operand), .HammOut(HammerDec_result) );
 
   mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_result), .res(LastWord) );
 
-  assign Dout_OK = Din_OK;
+//  assign Dout_OK = Din_OK;
 endmodule
