@@ -66,7 +66,7 @@ module pipe_encode_decode_Hammer(
 
   wire [17:0] HammerDec_result;
   Decode_Hamming_early Hdec(
-      .clk(clk), .rst(INT_RESET), .HammEn(Din_OK),
+      .clk(clk), .rst(rst), .HammEn(Din_OK),
       .HammIn(FirstWord), .HammOut(HammerDec_result) );
   mux2_x18 selDec( .sel(Decode), .if0(tmpSel), .if1(HammerDec_result), .res(LastWord) );
 
