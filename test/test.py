@@ -108,7 +108,7 @@ vectors = [
 ["001110001011100000", "101111110000110100"]]
 
 sequence = [ # for the Hammer18 tests
- 10,      # index=10
+ 10,      # index=10  ( out=in because the delay register is cleared)
  3147,
  228245,
  77,
@@ -193,10 +193,10 @@ async def test_project(dut):
     dut._log.info("Starting bypass Mode")
     for x in vectors:
       i = int(x[0],2)
-      print("testing      " + x[0]);
+      #print("testing      " + x[0]);
       await input_parameter(i, 0, dut)  # Encode = Decode = 0 => direct mode
       o = await output_parameter(dut)
-      print(" -found " + bin(o + (1 << 20)))
+      #print(" -found " + bin(o + (1 << 20)))
       assert i == o
     await ClockCycles(dut.clk, 6)
 
