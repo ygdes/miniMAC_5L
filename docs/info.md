@@ -1,4 +1,4 @@
-Note: development continues despite the messy tapeout on iHP26a.
+Note: after the messy tapeout on iHP26a, porting to CMOS5L PDK.
 
 ## What is this miniMAC
 
