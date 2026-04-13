@@ -1,3 +1,5 @@
+For a working version (that supports both sg13 and 5l), check [https://github.com/ygdes/miniMAC_IHP](https://github.com/ygdes/miniMAC_IHP)
+
 This project is a newer version than the bork one in [iHP26a tapeout](https://app.tinytapeout.com/projects/3758) and it is ported to the less-featured CMOS5L PDK.
 
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
